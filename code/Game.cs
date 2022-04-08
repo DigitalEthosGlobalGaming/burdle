@@ -18,6 +18,7 @@ namespace Burdle
 		{
 			CurrentGame = this;
 			Minigames = Create<MinigameController>();
+			StartGame<Platformer>();
 		}
 
 		/// <summary>

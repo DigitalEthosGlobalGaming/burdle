@@ -43,6 +43,7 @@ namespace Burdle
 			if (!SpawnPlatform.IsValid())
 			{
 				SpawnPlatform = Create<Platform>();
+				SpawnPlatform.Position = Vector3.Up * 1000f;
 				SpawnPlatform.SetModelAndPhysics( "models/room.vmdl" );
 				SpawnPlatform.Scale = scale;
 			} else { 

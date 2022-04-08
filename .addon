@@ -1,8 +1,8 @@
 {
-  "Title": "Blurdle",
+  "Title": "Burdle",
   "Type": "game",
-  "Org": "local",
-  "Ident": "blurdle",
+  "Org": "degg",
+  "Ident": "burdle",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
@@ -11,8 +11,9 @@
   "CodePath": "/code/",
   "RootNamespace": "Sandbox",
   "Metadata": {
-    "MapList": [
-      "facepunch.construct"
-    ]
+    "MapList": [],
+    "MapSelect": 0,
+    "MinPlayers": 1,
+    "MaxPlayers": 256
   }
 }
