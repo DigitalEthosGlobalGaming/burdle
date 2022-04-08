@@ -5,6 +5,11 @@ namespace Burdle
 {
 	public partial class Platform: ModelEntity
 	{
+		public override void Spawn()
+		{
+			base.Spawn();
+			Transmit = TransmitType.Always;
+		}
 		public void SetModelAndPhysics(string model)
 		{
 			this.SetModel( model );

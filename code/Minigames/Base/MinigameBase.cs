@@ -9,6 +9,7 @@ namespace Burdle
 
 		public override void Spawn()
 		{
+			Transmit = TransmitType.Always;
 			Players = new Dictionary<long, BurdlePlayer>();
 		}
 

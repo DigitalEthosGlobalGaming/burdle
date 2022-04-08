@@ -25,14 +25,15 @@ namespace Burdle
 				return;
 			}
 			JumpAccelleration = 1f;
+			var isJumpButtonPressed = input.Down( InputButton.Attack1 ) || input.Down( InputButton.Jump );
 
-			if ( input.Down( InputButton.Attack1 ) )
+			if ( isJumpButtonPressed )
 			{
 				float delta = JumpAccelleration * RealTime.Delta;
 				JumpPower = Math.Clamp( JumpPower + delta, 0, 1 );
 			}
 
-			if ( JumpPower >= 0.01f && !input.Down( InputButton.Attack1 ) )
+			if ( JumpPower >= 0.01f && !isJumpButtonPressed )
 			{
 				BurdlePlayer.Jump( CameraMode.Rotation.Yaw(), JumpPower );
 				LastJumpPower = JumpPower;

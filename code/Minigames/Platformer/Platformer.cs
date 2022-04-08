@@ -15,6 +15,7 @@ namespace Burdle
 		public override void SpawnPlayer(BurdlePlayer player)
 		{
 			var burdle = player.GetBurdle();
+			burdle.GiveRandomHat();
 			burdle.Velocity = Vector3.Zero;
 			burdle.Position = SpawnPlatform.Position + Vector3.Up * 50f;
 		}
@@ -57,10 +58,12 @@ namespace Burdle
 			var direction = Rand.Float( 0, 360 );
 
 			NextPlatform.Scale = scale;
-			var distance = Rand.Float( 500 * SpawnPlatform.Scale, 1000 * SpawnPlatform.Scale );
+			var distance = Rand.Float( 500 * SpawnPlatform.Scale, 750 * SpawnPlatform.Scale );
 
 			var rotation = Rotation.FromAxis( Vector3.Up, direction );
 			var position = rotation.Forward * distance;
+
+			NextPlatform.Rotation = rotation;
 
 
 

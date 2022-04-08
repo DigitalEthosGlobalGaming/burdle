@@ -109,7 +109,7 @@ namespace Burdle
 			{
 				if (Input.Pressed(InputButton.Reload))
 				{
-					BurdleGame.StartGame<Platformer>();
+					// BurdleGame.StartGame<Platformer>();
 				}
 			}
 

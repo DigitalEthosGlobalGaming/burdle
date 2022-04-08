@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Degg.Util;
+using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,11 @@ namespace Burdle
 	{
 
 		public float JumpPower { get; set; } = 250f;
+		public ModelEntity Hat { get; set; }
 		public bool CanJump { get; set; }
+
+		public string SoundToPlay { get; set; }
+		public float SoundVolume { get; set; }
 		public override void Spawn()
 		{
 			base.Spawn();
@@ -20,6 +25,47 @@ namespace Burdle
 			SetModel( "degg/monsters/chicken.vmdl" );
 			Scale = 0.5f;
 			SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+		}
+
+		public void GiveRandomHat()
+		{
+			var hatsList = new List<string>();
+			hatsList.Add( "models/citizen_clothes/hat/hat_leathercap.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_hardhat.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat.tophat.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_beret.black.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_beret.red.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_cap.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_leathercapnobadge.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_service.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_uniform.police.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_woolly.vmdl" );
+			hatsList.Add( "models/citizen_clothes/hat/hat_woollybobble.vmdl" );
+
+			if (Hat.IsValid())
+			{
+				Hat.Delete();
+			}
+
+			var hat = Create<ModelEntity>();
+			hat.SetParent( this );
+			hat.SetModel( Rand.FromList( hatsList ) );
+			Hat = hat;
+			Hat.Rotation = Rotation;
+			Hat.Position = this.Position - (Rotation.Down * -50f);
+		}
+		
+		[Event.Tick.Server]
+		public void Tick()
+		{
+			if ( (SoundToPlay ?? "") != "" )
+			{
+
+				var sound = PlaySound( SoundToPlay );
+				sound.SetPitch( 1f );
+				sound.SetVolume( Math.Clamp( SoundVolume,0f,1f ));
+				SoundToPlay = "";
+			}
 		}
 
 		public override void Simulate( Client cl )
@@ -32,7 +78,7 @@ namespace Burdle
 				{
 					TryToUpRight();
 				}
-			}			
+			}	
 		}
 		public void TryToUpRight()
 		{
@@ -43,6 +89,10 @@ namespace Burdle
 			{
 				return;
 			}
+
+			SoundToPlay = "cute.grunt.short";
+			SoundVolume = 0.5f;
+
 			Velocity = Vector3.Up * JumpPower;
 			ApplyLocalAngularImpulse( diff * JumpPower * 1.5f);
 
@@ -57,6 +107,16 @@ namespace Burdle
 			if ( !CanJump )
 			{
 				return;
+			}
+			
+			if (amount > 0.5)
+			{
+				SoundToPlay = "cute.grunt.long";
+				SoundVolume = 1;
+			} else if ( amount > 0.1)
+			{
+				SoundToPlay = "cute.grunt.short";
+				SoundVolume = amount;
 			}
 			CanJump = false;
 			var jumpHeight = 2f;
