@@ -18,6 +18,7 @@ namespace Burdle
 			burdle.GiveRandomHat();
 			burdle.Velocity = Vector3.Zero;
 			burdle.Position = SpawnPlatform.Position + Vector3.Up * 50f;
+			player.Client.SetInt( "score", 0 );
 		}
 		public override void Start()
 		{
@@ -77,6 +78,9 @@ namespace Burdle
 				if ( player.Position.z < (SpawnPlatform.Position.z - 100f) )
 				{
 					SpawnPlayer( player );
+				} else
+				{
+					player.Client.SetInt( "score", player.Client.GetInt("score", 0) + 1 );
 				}
 			}
 		}

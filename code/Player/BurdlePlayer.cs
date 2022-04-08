@@ -12,6 +12,11 @@ namespace Burdle
 		[Net]
 		public MinigameBase Gamemode { get; set; }
 
+
+
+
+		public PlayerUi HudPanel { get; protected set; }
+
 		[BindComponent] public FollowCamera Camera { get; set; }
 
 		public override void Respawn()
@@ -28,6 +33,8 @@ namespace Burdle
 
 			CreateBurdle();
 		}
+
+
 
 		public BurdleEntity GetBurdle()
 		{
@@ -77,6 +84,21 @@ namespace Burdle
 		public override void ClientSpawn()
 		{
 			base.ClientSpawn();
+			CreateUi();
+		}
+
+		[Event.Hotload]
+		public void CreateUi()
+		{
+			if ( IsClient )
+			{
+				if ( HudPanel?.IsValid() ?? false )
+				{
+					HudPanel.Delete();
+				}
+
+				HudPanel = new PlayerUi();
+			}
 		}
 		public override void OnKilled()
 		{
@@ -109,7 +131,7 @@ namespace Burdle
 			{
 				if (Input.Pressed(InputButton.Reload))
 				{
-					// BurdleGame.StartGame<Platformer>();
+					// this.Respawn();
 				}
 			}
 

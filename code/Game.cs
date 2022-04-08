@@ -27,12 +27,16 @@ namespace Burdle
 		public override void ClientJoined( Client client )
 		{
 			base.ClientJoined( client );
-			client.Pawn = new BurdlePlayer();
+			var pawn = new BurdlePlayer();
+
+			client.Pawn = pawn;
 
 			if(!Minigames.Current.IsValid())
 			{
 				StartGame<Platformer>();
 			}
+
+			pawn.JoinGame( Minigames.Current );
 		}
 
 		public static void StartGame<T>() where T: MinigameBase, new()
