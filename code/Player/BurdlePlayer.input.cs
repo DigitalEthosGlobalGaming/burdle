@@ -30,12 +30,10 @@ namespace Burdle
 			{
 				float delta = JumpAccelleration * RealTime.Delta;
 				JumpPower = Math.Clamp( JumpPower + delta, 0, 1 );
-				Log.Info( JumpPower );
 			}
 
 			if ( JumpPower >= 0.01f && !input.Down( InputButton.Attack1 ) )
 			{
-				Log.Info( JumpPower );
 				BurdlePlayer.Jump( CameraMode.Rotation.Yaw(), JumpPower );
 				LastJumpPower = JumpPower;
 				JumpPower = 0;
