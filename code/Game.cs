@@ -18,7 +18,7 @@ namespace Burdle
 		{
 			CurrentGame = this;
 			Minigames = Create<MinigameController>();
-			StartGame<Platformer>();
+
 		}
 
 		/// <summary>
@@ -28,6 +28,11 @@ namespace Burdle
 		{
 			base.ClientJoined( client );
 			client.Pawn = new BurdlePlayer();
+
+			if(!Minigames.Current.IsValid())
+			{
+				StartGame<Platformer>();
+			}
 		}
 
 		public static void StartGame<T>() where T: MinigameBase, new()

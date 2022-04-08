@@ -57,7 +57,7 @@ namespace Burdle
 			var direction = Rand.Float( 0, 360 );
 
 			NextPlatform.Scale = scale;
-			var distance = Rand.Float( 500 * SpawnPlatform.Scale, 600 * SpawnPlatform.Scale );
+			var distance = Rand.Float( 500 * SpawnPlatform.Scale, 1000 * SpawnPlatform.Scale );
 
 			var rotation = Rotation.FromAxis( Vector3.Up, direction );
 			var position = rotation.Forward * distance;
@@ -71,7 +71,7 @@ namespace Burdle
 			foreach ( var kv in Players )
 			{
 				var player = kv.Value;
-				if ( player.Position.z < -100 )
+				if ( player.Position.z < (SpawnPlatform.Position.z - 100f) )
 				{
 					SpawnPlayer( player );
 				}

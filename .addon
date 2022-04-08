@@ -11,7 +11,9 @@
   "CodePath": "/code/",
   "RootNamespace": "Sandbox",
   "Metadata": {
-    "MapList": [],
+    "MapList": [
+      "facepunch.construct"
+    ],
     "MapSelect": 0,
     "MinPlayers": 1,
     "MaxPlayers": 256
