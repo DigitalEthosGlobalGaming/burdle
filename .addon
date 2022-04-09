@@ -12,9 +12,9 @@
   "RootNamespace": "Sandbox",
   "Metadata": {
     "MapList": [
-      "degg.burdle_base"
+      "facepunch.construct"
     ],
-    "MapSelect": 2,
+    "MapSelect": 0,
     "MinPlayers": 1,
     "MaxPlayers": 256
   }

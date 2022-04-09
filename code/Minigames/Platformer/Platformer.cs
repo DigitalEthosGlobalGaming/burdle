@@ -1,8 +1,8 @@
-﻿using Degg.Util;
-using Sandbox;
+﻿using Sandbox;
 
 namespace Burdle
 {
+	[Library]
 	public partial class Platformer: MinigameBase
 	{
 
@@ -22,6 +22,8 @@ namespace Burdle
 		}
 		public override void Start()
 		{
+			base.Start();
+			GameDuration = 60f * 3;
 			PlatformSpawnTime = 3f;
 			End();
 			CreatePlatforms();

@@ -1,4 +1,5 @@
 ﻿
+using Degg.Utils;
 using Sandbox;
 
 namespace Burdle
@@ -13,6 +14,7 @@ namespace Burdle
 	public partial class BurdleGame : Game
 	{
 		public static BurdleGame CurrentGame {get;set;}
+		[Net]
 		public MinigameController Minigames { get; set; }
 		public BurdleGame()
 		{
@@ -33,12 +35,17 @@ namespace Burdle
 
 			if(!Minigames.Current.IsValid())
 			{
-				StartGame<Platformer>();
+				Minigames.RandomGame();
 			}
 
 			pawn.JoinGame( Minigames.Current );
 		}
 
+		[Event.Tick]
+		public void Tick()
+		{
+			TickableCollection.Global.Tick();
+		}
 		public static void StartGame<T>() where T: MinigameBase, new()
 		{
 			CurrentGame.Minigames.StartGame<T>();

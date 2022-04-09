@@ -37,5 +37,10 @@ namespace Burdle
 		{
 			
 		}
+
+		public T GetGame<T>() where T: MinigameBase
+		{
+			return (T) BurdleGame.CurrentGame.Minigames.Current;
+		}
 	}
 }

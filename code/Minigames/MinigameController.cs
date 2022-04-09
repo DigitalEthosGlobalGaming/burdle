@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Burdle
@@ -8,14 +9,28 @@ namespace Burdle
 		[Net]
 		public MinigameBase Current { get; set; }
 
-		
-		public MinigameController()
+		public override void Spawn()
 		{
-
+			base.Spawn();
+			Transmit = TransmitType.Always;
 		}
 		public T StartGame<T>() where T : MinigameBase, new()
 		{
 			return (T) StartGame( new T() );
+		}
+
+		public void RandomGame()
+		{
+			var games = new List<string>();
+			games.Add( "Racer" );
+			games.Add( "Platformer" );
+			var game = Rand.FromList( games );
+			StartGame( game );
+		}
+		public MinigameBase StartGame(string game)
+		{
+			var newGame = Library.Create<MinigameBase>( game );
+			return StartGame( newGame );
 		}
 
 		public void AddAllPlayersToGames()
@@ -23,7 +38,7 @@ namespace Burdle
 			if (Current != null)
 			{
 				var players = All.OfType<BurdlePlayer>();
-				foreach ( var player in players )
+				foreach ( var player in players.ToList() )
 				{
 					player.JoinGame( Current );
 				}
@@ -32,6 +47,10 @@ namespace Burdle
 
 		public MinigameBase StartGame( MinigameBase game)
 		{
+			if ( !(game?.IsValid() ?? false))
+			{
+				return null;
+			}
 			if (Current.IsValid())
 			{
 				Current.Delete();

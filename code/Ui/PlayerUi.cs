@@ -14,6 +14,19 @@ namespace Burdle
 			RootPanel.StyleSheet.Load( "/Degg/Ui/Styles/base.scss" );
 			RootPanel.AddChild<ChatBox>();
 			SetHudPanel<PlayerScore>();
+			RootPanel.AddChild<GameTimerUi>();
+		}
+
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+			foreach ( var item in Children )
+			{
+				if ( item.IsValid() )
+				{
+					item.Delete();
+				}
+			}
 		}
 
 		public virtual T SetHudPanel<T>() where T : Panel, new()

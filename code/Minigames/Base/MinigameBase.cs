@@ -7,6 +7,14 @@ namespace Burdle
 	{
 		public Dictionary<long, BurdlePlayer> Players { get; set; }
 
+		[Net]
+		public float GameEndTime { get; set; }
+		[Net]
+		public float GameDuration { get; set; }
+
+		[Net]
+		public float GameStartTime { get; set; }
+
 		public override void Spawn()
 		{
 			Transmit = TransmitType.Always;
@@ -26,6 +34,11 @@ namespace Burdle
 			}
 		}
 
+		public void SetGameDuration(float a)
+		{
+			GameDuration = a;
+		}
+
 		public virtual void Join( BurdlePlayer player)
 		{
 			Players[player.Client.PlayerId] = player;
@@ -35,9 +48,31 @@ namespace Burdle
 			Players.Remove( player.Client.PlayerId );
 		}
 
+
+		[Event.Tick.Server]
+		public void TickEvent()
+		{
+			Tick();
+		}
+
+		public virtual void Tick()
+		{
+			if ( GameDuration > 0) {
+				if (GameStartTime == -1 ) {
+					GameStartTime = Time.Now;
+					GameEndTime = GameStartTime + GameDuration;
+				}
+
+				if (GameEndTime < Time.Now)
+				{
+					BurdleGame.CurrentGame.Minigames.RandomGame();
+				}
+			}
+		}
 		public virtual void Start()
 		{
-
+			GameStartTime = -1;
+			GameEndTime = -1;
 		}
 		public virtual void End()
 		{

@@ -44,8 +44,7 @@ namespace Degg.Cameras {
 
 			TargetAngles.yaw += input.AnalogLook.yaw;
 
-			if ( !input.Down( InputButton.Attack1 ) )
-				TargetAngles.pitch += input.AnalogLook.pitch;
+			TargetAngles.pitch += input.AnalogLook.pitch;
 
 			TargetAngles = TargetAngles.Normal;
 

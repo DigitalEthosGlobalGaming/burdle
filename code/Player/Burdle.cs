@@ -1,10 +1,6 @@
-﻿using Degg.Util;
-using Sandbox;
+﻿using Sandbox;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Burdle
 {
@@ -21,15 +17,20 @@ namespace Burdle
 		{
 			base.Spawn();
 			Position = Position + (Vector3.Up * 100f);
+			UpdatModel();
+		}
+
+		public void UpdatModel()
+		{
 			Transmit = TransmitType.Always;
 			SetModel( "degg/models/monsters/chicken.vmdl" );
-			
 			Scale = 0.5f;
 			SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 		}
-
 		public void GiveRandomHat()
 		{
+			UpdatModel();
+
 			var hatsList = new List<string>();
 			hatsList.Add( "models/citizen_clothes/hat/hat_leathercap.vmdl" );
 			hatsList.Add( "models/citizen_clothes/hat/hat_hardhat.vmdl" );

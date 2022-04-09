@@ -1,0 +1,32 @@
+﻿@import "../Degg/Ui/Styles/variables.scss";
+
+.game-timer-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    justify-content:center;
+}
+
+.timer {
+    font-family: $font-base;
+    font-size: $font-size-medium;
+    background-color: $c-primary-200;
+    border-left-color: $c-primary-400;
+    border-left-width: 8px;
+    border-right-color: $c-primary-400;
+    border-right-width: 8px;
+    border-bottom-color: $c-primary-400;
+    border-bottom-width: 4px;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    font-weight: bold;
+    padding: 16px;
+    padding-left: 32px;
+    padding-right: 32px;
+    transition: all 0.1s ease-in-out;
+}
+
+.hidden {
+    display: none;
+}
