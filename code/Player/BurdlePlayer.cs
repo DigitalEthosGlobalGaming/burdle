@@ -12,6 +12,8 @@ namespace Burdle
 		[Net]
 		public MinigameBase Gamemode { get; set; }
 
+		public bool UiIsSetup { get; set; } = false;
+
 
 
 
@@ -84,7 +86,6 @@ namespace Burdle
 		public override void ClientSpawn()
 		{
 			base.ClientSpawn();
-			CreateUi();
 		}
 
 		[Event.Hotload]
@@ -92,12 +93,10 @@ namespace Burdle
 		{
 			if ( IsClient )
 			{
-				if ( HudPanel?.IsValid() ?? false )
+				if ( !HudPanel.IsValid())
 				{
-					HudPanel.Delete();
-				}
-
-				HudPanel = new PlayerUi();
+					HudPanel = new PlayerUi();
+				}				
 			}
 		}
 		public override void OnKilled()
@@ -113,6 +112,16 @@ namespace Burdle
 		{
 			base.OnDestroy();
 
+		}
+
+		public override void FrameSimulate( Client cl )
+		{
+			base.FrameSimulate( cl );
+			if ( Owner == Client && !UiIsSetup )
+			{
+				UiIsSetup = true;
+				CreateUi();
+			}
 		}
 
 		public override void Simulate( Client cl )

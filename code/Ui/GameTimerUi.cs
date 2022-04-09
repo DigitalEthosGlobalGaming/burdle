@@ -18,14 +18,17 @@ namespace Burdle
 		{
 			base.Tick();
 			var current = BurdleGame.CurrentGame.Minigames.Current;
-			var hasTimer = current.GameEndTime > 0;
-			SetClass( "hidden", !hasTimer );
-			if ( hasTimer )
+			if ( current != null )
 			{
-				var difference = Math.Round(current.GameEndTime - Time.Now);
-				var seconds = Math.Floor( difference % 60);
-				var minutes = Math.Floor(difference / 60);
-				TimeLeft.Text = $"{minutes}:{seconds}";
+				var hasTimer = current.GameEndTime > 0;
+				SetClass( "hidden", !hasTimer );
+				if ( hasTimer )
+				{
+					var difference = Math.Round( current.GameEndTime - Time.Now );
+					var seconds = Math.Floor( difference % 60 );
+					var minutes = Math.Floor( difference / 60 );
+					TimeLeft.Text = $"{minutes}:{seconds}";
+				}
 			}
 
 		}

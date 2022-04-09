@@ -1,6 +1,7 @@
 ﻿
 using Degg.Util;
 using Sandbox;
+using Sandbox.UI;
 
 namespace Burdle
 {
@@ -26,14 +27,25 @@ namespace Burdle
 					switch ( parts[0] )
 					{
 						case "/game":
-							CurrentGame.Minigames.StartGame( parts[1] );
+							if ( parts[1] == "random" ) {
+								CurrentGame.Minigames.RandomGame();
+							} else {
+								CurrentGame.Minigames.StartGame( parts[1] );
+							}
 
 							return;
 						default:
 							break;
 					}
 				}
-				AdvLog.Info( parts );
+			} else
+			{
+				// todo - reject more stuff
+				if ( message.Contains( '\n' ) || message.Contains( '\r' ) )
+					return;
+
+				Log.Info( $"{ConsoleSystem.Caller}: {message}" );
+				ChatBox.AddChatEntry( To.Everyone, ConsoleSystem.Caller.Name, message, $"avatar:{ConsoleSystem.Caller.PlayerId}" );
 			}
 
 		}

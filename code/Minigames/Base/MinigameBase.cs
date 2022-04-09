@@ -43,6 +43,11 @@ namespace Burdle
 		{
 			Players[player.Client.PlayerId] = player;
 		}
+
+		public virtual bool CanStart( )
+		{
+			return true;
+		}
 		public virtual void Leave( BurdlePlayer player )
 		{
 			Players.Remove( player.Client.PlayerId );

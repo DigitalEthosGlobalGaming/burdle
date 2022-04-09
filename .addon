@@ -12,9 +12,9 @@
   "RootNamespace": "Sandbox",
   "Metadata": {
     "MapList": [
-      "facepunch.construct"
+      "burdle_sunny"
     ],
-    "MapSelect": 0,
+    "MapSelect": 1,
     "MinPlayers": 1,
     "MaxPlayers": 256
   }

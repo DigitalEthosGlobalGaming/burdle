@@ -8,13 +8,26 @@ namespace Burdle
 	public partial class PlayerUi : HudEntity<RootPanel>
 	{
 
-		public Panel HudPanel { get; set; }
+		public static PlayerUi Current { get; set; }
+		public Panel ScoreUi { get; set; }
+		public Panel TimerUi { get; set; }
 		public PlayerUi()
 		{
+			Current = this;
 			RootPanel.StyleSheet.Load( "/Degg/Ui/Styles/base.scss" );
 			RootPanel.AddChild<ChatBox>();
-			SetHudPanel<PlayerScore>();
-			RootPanel.AddChild<GameTimerUi>();
+			Setup();
+
+
+		}
+
+		[Event.Hotload]
+		public void Setup()
+		{
+			ScoreUi?.Delete( true );
+			TimerUi?.Delete( true );
+			TimerUi = RootPanel.AddChild<GameTimerUi>();
+			ScoreUi = RootPanel.AddChild<PlayerScore>();
 		}
 
 		protected override void OnDestroy()
@@ -27,13 +40,6 @@ namespace Burdle
 					item.Delete();
 				}
 			}
-		}
-
-		public virtual T SetHudPanel<T>() where T : Panel, new()
-		{
-			HudPanel?.Delete( true );
-			HudPanel = RootPanel.AddChild<T>();
-			return (T)HudPanel;
 		}
 	}
 }

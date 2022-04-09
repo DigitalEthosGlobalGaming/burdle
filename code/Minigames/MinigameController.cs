@@ -19,13 +19,22 @@ namespace Burdle
 			return (T) StartGame( new T() );
 		}
 
-		public void RandomGame()
+		public void RandomGame(int count = 0)
 		{
+			if ( count >= 100)
+			{
+				throw new System.Exception( "Error starting game couldn't find a random game to start in 100 goes." );
+			}
 			var games = new List<string>();
 			games.Add( "Racer" );
 			games.Add( "Platformer" );
+			games.Add( "AreaControl" );
 			var game = Rand.FromList( games );
-			StartGame( game );
+			var newGame = StartGame( game );
+			if ( newGame  == null)
+			{
+				RandomGame( count + 1 );
+			}
 		}
 		public MinigameBase StartGame(string game)
 		{
@@ -48,6 +57,10 @@ namespace Burdle
 		public MinigameBase StartGame( MinigameBase game)
 		{
 			if ( !(game?.IsValid() ?? false))
+			{
+				return null;
+			}
+			if (!game.CanStart())
 			{
 				return null;
 			}

@@ -1,6 +1,8 @@
 ﻿
 using Degg.Utils;
 using Sandbox;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Burdle
 {
@@ -49,6 +51,12 @@ namespace Burdle
 		public static void StartGame<T>() where T: MinigameBase, new()
 		{
 			CurrentGame.Minigames.StartGame<T>();
+		}
+
+		public static List<BurdlePlayer> GetAllPlayers()
+		{
+			var players = All.OfType<BurdlePlayer>();
+			return players.ToList();
 		}
 	}
 

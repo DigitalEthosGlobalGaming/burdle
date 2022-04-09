@@ -24,7 +24,6 @@ namespace Burdle
 		public override void SpawnPlayer(BurdlePlayer player)
 		{
 			var burdle = player.GetBurdle();
-			burdle.GiveRandomHat();
 
 			var currentScore = player.Client.GetInt( "score", 0 );
 			if ( currentScore <= 0)

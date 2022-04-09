@@ -1,4 +1,6 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Burdle
 {
@@ -87,8 +89,7 @@ namespace Burdle
 			}
 		}
 
-		[Event.Tick.Server]
-		public void Tick()
+		public override void Tick()
 		{
 			var now = Time.Now;
 			if ( now > NextPlatformSpawn )
