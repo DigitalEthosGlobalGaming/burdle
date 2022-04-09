@@ -1,14 +1,16 @@
 ﻿using Sandbox;
-
+using System.Collections.Generic;
 
 namespace Burdle
 {
 	public partial class Platform: ModelEntity
 	{
+		public List<Entity> HasTouched { get; set; }
 		public override void Spawn()
 		{
 			base.Spawn();
 			Transmit = TransmitType.Always;
+			HasTouched = new List<Entity>();
 		}
 		public void SetModelAndPhysics(string model)
 		{
@@ -22,6 +24,18 @@ namespace Burdle
 			{
 				burdle.CanJump = true;
 			}
+			if ( HasTouched != null )
+			{
+				if ( !HasTouched.Contains( other ) )
+				{
+					HasTouched.Add( other );
+					FirstTouch( other );
+				}
+			}
+		}
+		public virtual void FirstTouch(Entity other)
+		{
+			
 		}
 	}
 }

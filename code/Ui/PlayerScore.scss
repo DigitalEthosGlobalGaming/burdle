@@ -22,4 +22,10 @@
     border-bottom-left-radius: $border-radius;
     font-weight: bold;
     padding: 16px;
+    transition: all 0.1s ease-in-out;
+}
+
+.score-new {
+    transition: none;
+    font-size: $font-size-large;
 }

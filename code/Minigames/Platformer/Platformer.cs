@@ -6,8 +6,8 @@ namespace Burdle
 	public partial class Platformer: MinigameBase
 	{
 
-		public Platform SpawnPlatform { get; set; }
-		public Platform NextPlatform { get; set; }
+		public TargetPlatform SpawnPlatform { get; set; }
+		public TargetPlatform NextPlatform { get; set; }
 
 		public float NextPlatformSpawn { get; set; }
 		public float PreviousPlatformSpawn { get; set; }
@@ -41,25 +41,25 @@ namespace Burdle
 
 		public void CreatePlatforms()
 		{
-			var scale = Rand.Float( 0.2f, 0.75f );
+			var scale = Rand.Float( 0.5f, 3f );
 			if (!SpawnPlatform.IsValid())
 			{
-				SpawnPlatform = Create<Platform>();
+				SpawnPlatform = Create<TargetPlatform>();
 				SpawnPlatform.Position = Vector3.Up * 1000f;
-				SpawnPlatform.SetModelAndPhysics( "models/room.vmdl" );
+				SpawnPlatform.SetModelAndPhysics( "degg/models/simple/platform.vmdl" );
 				SpawnPlatform.Scale = scale;
 			} else { 
 				SpawnPlatform.Delete();
 				SpawnPlatform = NextPlatform;
 			}
 
-			NextPlatform = new Platform();
-			NextPlatform.SetModelAndPhysics( "models/room.vmdl" );
+			NextPlatform = new TargetPlatform();
+			NextPlatform.SetModelAndPhysics( "degg/models/simple/platform.vmdl" );
 
 			var direction = Rand.Float( 0, 360 );
 
 			NextPlatform.Scale = scale;
-			var distance = Rand.Float( 500 * SpawnPlatform.Scale, 750 * SpawnPlatform.Scale );
+			var distance = Rand.Float( 160 * SpawnPlatform.Scale, 190 * SpawnPlatform.Scale );
 
 			var rotation = Rotation.FromAxis( Vector3.Up, direction );
 			var position = rotation.Forward * distance;
@@ -75,12 +75,12 @@ namespace Burdle
 			foreach ( var kv in Players )
 			{
 				var player = kv.Value;
-				if ( player.Position.z < (SpawnPlatform.Position.z - 100f) )
+				if ( player.IsValid )
 				{
-					SpawnPlayer( player );
-				} else
-				{
-					player.Client.SetInt( "score", player.Client.GetInt("score", 0) + 1 );
+					if ( player.Position.z < (SpawnPlatform.Position.z - 100f) )
+					{
+						SpawnPlayer( player );
+					}
 				}
 			}
 		}
@@ -99,11 +99,11 @@ namespace Burdle
 			var diff = NextPlatformSpawn - now;
 
 			var percentage = diff / total;
+			if ( SpawnPlatform.IsValid )
+			{
 
-			SpawnPlatform.RenderColor = Color.Lerp(Color.Red, Color.White, percentage);
-
-
-
+				SpawnPlatform.RenderColor = Color.Lerp( Color.Red, Color.White, percentage );
+			}
 		}
 	}
 }

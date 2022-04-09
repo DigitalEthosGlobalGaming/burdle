@@ -22,7 +22,8 @@ namespace Burdle
 			base.Spawn();
 			Position = Position + (Vector3.Up * 100f);
 			Transmit = TransmitType.Always;
-			SetModel( "degg/monsters/chicken.vmdl" );
+			SetModel( "degg/models/monsters/chicken.vmdl" );
+			
 			Scale = 0.5f;
 			SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 		}
