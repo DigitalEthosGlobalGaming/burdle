@@ -9,16 +9,21 @@ namespace Burdle
 
 		public float JumpPower { get; set; } = 250f;
 		public ModelEntity Hat { get; set; }
+
+		[Net]
 		public bool CanJump { get; set; }
 
 		public string SoundToPlay { get; set; }
 		public float SoundVolume { get; set; }
+
+		public BurdleCharger BurdleUi { get; set; }
 		public override void Spawn()
 		{
 			base.Spawn();
 			Position = Position + (Vector3.Up * 100f);
 			UpdatModel();
 		}
+
 
 		public void UpdatModel()
 		{
@@ -82,6 +87,12 @@ namespace Burdle
 				}
 			}	
 		}
+
+		public override void FrameSimulate( Client cl )
+		{
+			base.FrameSimulate( cl );
+			CreateWorldUi();
+		}
 		public void TryToUpRight()
 		{
 			var diff = (Vector3.Up - Rotation.Up);
@@ -127,6 +138,37 @@ namespace Burdle
 			direction = Vector3.Up * jumpHeight + direction;
 			Velocity = direction * amount * force;
 			ApplyLocalAngularImpulse( Velocity );
+		}
+
+		[Event.Hotload]
+		public void Hotload()
+		{
+			if (IsClient)
+			{
+				CreateWorldUi(true);
+			}
+		}
+
+		public void CreateWorldUi(bool deleteExisting = false)
+		{
+			if ( IsClient )
+			{
+				if ( deleteExisting || BurdleUi == null )
+				{
+					if ( Owner.Client == Local.Client )
+					{
+						BurdleUi?.Delete( true );
+					}
+					BurdleUi = new BurdleCharger(this);
+
+				}
+			}
+		}
+
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+			BurdleUi?.Delete();
 		}
 	}
 }

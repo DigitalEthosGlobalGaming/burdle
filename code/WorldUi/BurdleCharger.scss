@@ -1,0 +1,20 @@
+﻿BurdleCharger {
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+    border-width: 8px;
+    border-color: rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.2);
+
+    &.disabled {
+        border-color: rgba(255,0,0,0.1);
+    }
+
+    .inner {
+        border-radius: 100%;
+        background-color: rgba(0,180,255,0.5);
+    }
+}

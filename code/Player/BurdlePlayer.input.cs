@@ -1,6 +1,4 @@
-﻿using Burdle;
-using Degg.Cameras;
-using Sandbox;
+﻿using Sandbox;
 using System;
 
 namespace Burdle
