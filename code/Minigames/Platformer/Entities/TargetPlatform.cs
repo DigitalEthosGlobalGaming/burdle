@@ -6,12 +6,9 @@ namespace Burdle
 {
 	public partial class TargetPlatform: Platform
 	{
-		public override void FirstTouch(Entity other)
+		public override void FirstTouch(BurdleEntity entity )
 		{
-			if (other is BurdleEntity)
-			{
-				other.Client.AddInt( "score",  1 );
-			}
+			entity.AddScore( 1 );
 		}
 	}
 }

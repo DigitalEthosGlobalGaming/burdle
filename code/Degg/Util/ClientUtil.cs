@@ -17,5 +17,18 @@ namespace Degg
 		{
 			return GetPawn<Pawn>();
 		}
+
+		public static T GetCallingPawn<T>() where T: Entity
+		{
+			var client = ConsoleSystem.Caller;
+			if ( client?.Pawn is T clientPawn )
+			{
+				return clientPawn;
+			}
+			return null;
+		}
+
+
+
 	}
 }

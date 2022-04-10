@@ -23,6 +23,7 @@ namespace Burdle
 			if (other is BurdleEntity burdle)
 			{
 				burdle.CanJump = true;
+				StartTouch( burdle );
 			}
 			if ( HasTouched != null )
 			{
@@ -33,9 +34,21 @@ namespace Burdle
 				}
 			}
 		}
+
+		public virtual void StartTouch( BurdleEntity other )
+		{
+
+		}
 		public virtual void FirstTouch(Entity other)
 		{
-			
+			if (other is BurdleEntity ent)
+			{
+				FirstTouch( ent );
+			}
+		}
+
+		public virtual void FirstTouch( BurdleEntity other )
+		{
 		}
 
 		public T GetGame<T>() where T: MinigameBase

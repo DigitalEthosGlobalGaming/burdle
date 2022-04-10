@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Degg.Util;
+using Sandbox;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,7 @@ namespace Burdle
 			GameDuration = 60f * 3;
 			PlatformSpawnTime = 3f;
 			End();
+			Name = "Target Burd";
 			CreatePlatforms();
 		}
 
@@ -41,6 +43,15 @@ namespace Burdle
 		{
 			End();
 			base.OnDestroy();			
+		}
+
+		public override void SetScore( string name, float score )
+		{
+			var current = GetScore( name );
+			if (score > current)
+			{
+				base.SetScore( name, score );
+			}
 		}
 
 		public void CreatePlatforms()

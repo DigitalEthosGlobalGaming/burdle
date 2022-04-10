@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Degg.Util;
+using Sandbox;
 using System;
 using System.Collections.Generic;
 
@@ -17,20 +18,39 @@ namespace Burdle
 		public float SoundVolume { get; set; }
 
 		public BurdleCharger BurdleUi { get; set; }
+
+
 		public override void Spawn()
 		{
 			base.Spawn();
+			Transmit = TransmitType.Always;
 			Position = Position + (Vector3.Up * 100f);
 			UpdatModel();
 		}
 
+		public override void ClientSpawn()
+		{
+			base.ClientSpawn();
+			UpdatModel();
+		}
+		public override void OnClientActive()
+		{
+			base.OnClientActive();
+			UpdatModel();
+		}
+
+
 
 		public void UpdatModel()
 		{
-			Transmit = TransmitType.Always;
-			SetModel( "degg/models/monsters/chicken.vmdl" );
-			Scale = 0.5f;
-			SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+			if ( IsServer )
+			{
+				Transmit = TransmitType.Always;
+				SetModel( "degg/models/monsters/chicken.vmdl" );
+				Scale = 0.5f;
+				SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+			}
+			CreateWorldUi(true);
 		}
 		public void GiveRandomHat()
 		{
@@ -57,6 +77,7 @@ namespace Burdle
 			var hat = Create<ModelEntity>();
 			hat.SetParent( this );
 			hat.SetModel( Rand.FromList( hatsList ) );
+			hat.Transmit = TransmitType.Always;
 			Hat = hat;
 			Hat.Rotation = Rotation;
 			Hat.Position = this.Position - (Rotation.Down * -50f);
@@ -111,6 +132,24 @@ namespace Burdle
 
 		}
 
+		public BurdlePlayer GetPlayer()
+		{
+			if (Owner is BurdlePlayer player)
+			{
+				return player;
+			}
+			return null;
+		}
+		public T GetMinigame<T>() where T: MinigameBase
+		{
+			var player = GetPlayer();
+			if (player.Gamemode is T)
+			{
+				return (T)player.Gamemode;
+			}
+			return null;
+		}
+
 		public virtual void Move()
 		{
 			Log.Info( "Test" );
@@ -155,12 +194,11 @@ namespace Burdle
 			{
 				if ( deleteExisting || BurdleUi == null )
 				{
-					if ( Owner.Client == Local.Client )
+					if ( Owner?.Client == Local.Client )
 					{
 						BurdleUi?.Delete( true );
+						BurdleUi = new BurdleCharger( this );
 					}
-					BurdleUi = new BurdleCharger(this);
-
 				}
 			}
 		}

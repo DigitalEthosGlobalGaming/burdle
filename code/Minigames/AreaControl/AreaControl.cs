@@ -1,4 +1,5 @@
-﻿using Degg.Utils;
+﻿using Degg.Util;
+using Degg.Utils;
 using Sandbox;
 using System;
 using System.Collections.Generic;
@@ -100,6 +101,7 @@ namespace Burdle
 			base.Start();
 			GameDuration = 60f * 4;
 			End();
+			Name = "Burdle Control";
 			RedTeam = new List<BurdleEntity>();
 			BlueTeam = new List<BurdleEntity>();
 			PlayerCheckerTimer = new Timer( CheckPlayers, 1000f );
@@ -205,24 +207,40 @@ namespace Burdle
 				}
 			}
 
+			SetScore( "Red", redScore );
+			SetScore( "Blue", blueScore );
+
 			foreach ( var kv in Players )
 			{
 				var player = kv.Value;
 				if ( player.IsValid )
 				{
-					var playerScore = 0;
 					if (player.Client.GetInt("team") == (int)Teams.Red) {
-						playerScore = redScore;
+						player.SetScore(redScore);
 					} else
 					{
-						playerScore = blueScore;
+						player.SetScore( blueScore );
 					}
-					player.Client.SetInt( "score", playerScore );
+
 					if ( player.Position.z < (MinimumHeight - 100f) )
 					{
 						SpawnPlayer( player );
 					}
 				}
+			}
+		}
+
+		public override void SetScore( BurdlePlayer player, float score )
+		{
+			if ( IsClient )
+			{
+				AdvLog.Warning( "Tried to call set score on client" );
+				return;
+			}
+
+			if ( player.IsValid() )
+			{
+				player.Client.SetValue( "score", score );
 			}
 		}
 	}

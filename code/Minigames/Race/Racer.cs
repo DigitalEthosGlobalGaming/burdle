@@ -25,7 +25,7 @@ namespace Burdle
 		{
 			var burdle = player.GetBurdle();
 
-			var currentScore = player.Client.GetInt( "score", 0 );
+			var currentScore = (int) player.GetScore();
 			if ( currentScore <= 0)
 			{
 				currentScore = 0;
@@ -47,12 +47,13 @@ namespace Burdle
 			base.Join( player );
 			var burdle = player.GetBurdle();
 			burdle.GiveRandomHat();
-			player.Client.SetInt( "score", 0 );
+			player.SetScore( 0 );
 		}
 
 		public override void Start()
 		{
 			End();
+			Name = "Buuurrrrrdle";
 			PlayerCheckerTimer = new Timer( CheckPlayers, 1000f );
 			PlayerCheckerTimer.Start();
 
@@ -151,11 +152,10 @@ namespace Burdle
 			{
 				var player = kv.Value;
 				if ( player.IsValid )
-				{
-				
+				{				
 					numberOfPlayers = numberOfPlayers + 1;
 
-					if ( player.Client.GetInt( "score", 0 ) >= Platforms.Count - 1 )
+					if ( player.GetScore() >= Platforms.Count - 1 )
 					{
 						winningPlayers = winningPlayers + 1;
 					}

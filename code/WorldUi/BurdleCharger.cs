@@ -61,11 +61,10 @@ namespace Burdle
 					int amount = (int)(charge * 100);
 					Inner.Style.Set( "width", $"{amount}%" );
 					Inner.Style.Set( "height", $"{amount}%" );
-
 				}
 			} else {
-					Style.Opacity = 0f;
-				}
+				Style.Opacity = 0f;
+			}
 			
 
 		}

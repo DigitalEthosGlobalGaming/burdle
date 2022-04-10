@@ -17,6 +17,7 @@ namespace Burdle
 
 		public override void Spawn()
 		{
+			Name = "Game";
 			Transmit = TransmitType.Always;
 			Players = new Dictionary<long, BurdlePlayer>();
 		}
@@ -78,6 +79,7 @@ namespace Burdle
 		{
 			GameStartTime = -1;
 			GameEndTime = -1;
+			SetupScoreboard();
 		}
 		public virtual void End()
 		{

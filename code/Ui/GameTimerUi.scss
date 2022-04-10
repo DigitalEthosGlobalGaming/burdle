@@ -9,15 +9,16 @@
 }
 
 .timer {
+    color: white;
     font-family: $font-base;
     font-size: $font-size-medium;
-    background-color: $c-primary-200;
-    border-left-color: $c-primary-400;
-    border-left-width: 8px;
-    border-right-color: $c-primary-400;
-    border-right-width: 8px;
-    border-bottom-color: $c-primary-400;
-    border-bottom-width: 4px;
+    background-color: $c-primary-500;
+    border-left-color: $c-primary-800;
+    border-right-color: $c-primary-800;
+    border-bottom-color: $c-primary-800;
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 2px;
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     font-weight: bold;

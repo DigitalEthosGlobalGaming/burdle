@@ -1,13 +1,13 @@
-﻿using Sandbox;
+﻿using Degg.Ui.Elements;
+using Sandbox;
 using Sandbox.UI;
 
 namespace Burdle
 {
-	public class PlayerScore : Panel
+	public class PlayerScore : PlayerPanel<BurdlePlayer>
 	{
 		public Label Score { get; set; }
 		public Panel ScoreContainer { get; set; }
-
 
 		public int LastScore { get; set; } = 0;
 		public float NextScoreTransition { get; set; } = 0;
@@ -20,29 +20,33 @@ namespace Burdle
 
 		public override void Tick()
 		{
+			
 			base.Tick();
-			if ( Score != null )
+
+			if ( Player?.IsValid() ?? false )
 			{
-				var score = Local.Client.GetInt( "score", 0 );
-				var newScore = true;
-				if (LastScore != score && score > 0)
+				if ( Score != null )
 				{
-					NextScoreTransition = Time.Now + 1f;
-					LastScore = score;
-					newScore = true;
-				} else if ( NextScoreTransition <= Time.Now )
-				{
-					newScore = false;
-				}
+					var score = Player.GetScore();
+					var newScore = true;
+					if ( LastScore != score && score > 0 )
+					{
+						NextScoreTransition = Time.Now + 1f;
+						LastScore = (int)score;
+						newScore = true;
+					}
+					else if ( NextScoreTransition <= Time.Now )
+					{
+						newScore = false;
+					}
 
-				if ( ScoreContainer != null )
-				{
-					ScoreContainer.SetClass( "score-new", newScore );
+					if ( ScoreContainer != null )
+					{
+						ScoreContainer.SetClass( "score-new", newScore );
+					}
+					Score.Text = score.ToString();
 				}
-				Score.Text = score.ToString();
 			}
-
 		}
-
 	}
 }

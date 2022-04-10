@@ -13,22 +13,19 @@ namespace Burdle
 			SetModelAndPhysics( "degg/models/simple/platform.vmdl" );
 		}
 
-		public override void FirstTouch(Entity other)
+		public override void FirstTouch( BurdleEntity entity )
 		{
-			if (other is BurdleEntity)
-			{
-				var currentScore = other.Client.GetInt( "score", 0 );
+				var currentScore = entity.GetScore();
 				if (currentScore < Index)
 				{
-					other.Client.SetInt( "score", Index );
+					entity.SetScore( Index );
 				}
 
 				var current = GetGame<Racer>();
 				if ( Index >= current.Platforms.Count -1)
 				{
-					current.SpawnPlayer( (BurdlePlayer) other.Owner );
+					current.SpawnPlayer( (BurdlePlayer)entity.Owner );
 				}
-			}
 		}
 	}
 }

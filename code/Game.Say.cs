@@ -1,4 +1,5 @@
 ﻿
+using Degg;
 using Degg.Util;
 using Sandbox;
 using Sandbox.UI;
@@ -12,32 +13,46 @@ namespace Burdle
 	/// You can use this to create things like HUDs and declare which player class
 	/// to use for spawned players.
 	/// </summary>
-	public partial class BurdleGame : Game
+	public partial class BurdleGame
 	{
 		[ServerCmd( "say" )]
 		public static void Say( string message )
 		{
 			Assert.NotNull( ConsoleSystem.Caller );
+			var caller = ClientUtil.GetCallingPawn<BurdlePlayer>();
+
+			if ( !(caller?.IsValid() ?? false)) {
+				return;
+			}
 
 			if (message.StartsWith("/"))
 			{
 				var parts = message.Split( " " );
-				if (parts.Length > 1)
+				if (parts.Length > 0)
 				{
 					switch ( parts[0] )
 					{
 						case "/game":
-							if ( parts[1] == "random" ) {
-								CurrentGame.Minigames.RandomGame();
-							} else {
-								CurrentGame.Minigames.StartGame( parts[1] );
+							if ( parts.Length > 1 )
+							{
+								if ( parts[1] == "random" )
+								{
+									CurrentGame.Minigames.RandomGame();
+								}
+								else
+								{
+									CurrentGame.Minigames.StartGame( parts[1] );
+								}
 							}
 
+							return;
+						case "/refresh":
+							caller.CreateBurdle();
 							return;
 						default:
 							break;
 					}
-				}
+				} else { }
 			} else
 			{
 				// todo - reject more stuff

@@ -1,4 +1,5 @@
 ﻿
+using Degg;
 using Degg.Utils;
 using Sandbox;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Burdle
 	/// You can use this to create things like HUDs and declare which player class
 	/// to use for spawned players.
 	/// </summary>
-	public partial class BurdleGame : Game
+	public partial class BurdleGame : AdvGame
 	{
 		public static BurdleGame CurrentGame {get;set;}
 		[Net]

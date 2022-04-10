@@ -15,6 +15,15 @@ namespace Degg.Util
 			return pc;
 		}
 
+		public static bool Down( InputButton pc, InputButton controller )
+		{
+			if ( Input.UsingController )
+			{
+				return Input.Down( controller );
+			}
+			return Input.Down( pc );
+		}
+
 		public static bool Pressed( InputButton pc, InputButton controller )
 		{
 			if ( Input.UsingController )

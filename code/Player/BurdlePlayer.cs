@@ -14,9 +14,6 @@ namespace Burdle
 
 		public bool UiIsSetup { get; set; } = false;
 
-
-
-
 		public PlayerUi HudPanel { get; protected set; }
 
 		[BindComponent] public FollowCamera Camera { get; set; }
@@ -24,17 +21,14 @@ namespace Burdle
 		public override void Respawn()
 		{
 			base.Respawn();
-
-			// todo: not sure I like this setup, might prefer it like CarEntity
-			// so the player is actually a normal terry instead of an invisible entity w/ controller
-			SetModel( "models/parts/seats/dev_seat.vmdl" );
+			Transmit = TransmitType.Owner;
 			EnableDrawing = false;
-			EnableAllCollisions = true;
+			EnableAllCollisions = false;
 
 			Animator = new BurdleAnimator();
-
 			CreateBurdle();
 		}
+
 
 
 
@@ -68,7 +62,7 @@ namespace Burdle
 				return;
 			}
 
-			if (Burdle != null)
+			if (Burdle?.IsValid() ?? false)
 			{
 				Burdle.Delete();
 			}
@@ -82,6 +76,7 @@ namespace Burdle
 
 			Burdle = Create<BurdleEntity>();
 			Burdle.Owner = this;
+			Burdle.UpdatModel();
 		}
 		public override void ClientSpawn()
 		{
@@ -95,7 +90,7 @@ namespace Burdle
 			{
 				if ( !HudPanel.IsValid())
 				{
-					HudPanel = new PlayerUi();
+					HudPanel = new PlayerUi(this);
 				}				
 			}
 		}
@@ -134,25 +129,10 @@ namespace Burdle
 				Position = Burdle.Position;
 			}
 
-			
-
-			if (IsServer)
-			{
-				if (Input.Pressed(InputButton.Reload))
-				{
-					// this.Respawn();
-				}
-			}
-
 			if ( Burdle != null )
 			{
 				Burdle.Simulate( cl );
 			}
-
 		}
-
-
 	}
-
-
 }

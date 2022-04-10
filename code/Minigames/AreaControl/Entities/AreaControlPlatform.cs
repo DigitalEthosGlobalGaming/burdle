@@ -17,8 +17,7 @@ namespace Burdle
 			base.StartTouch( other );
 
 			if ( other is BurdleEntity ent )
-			{
-				
+			{				
 				var current = GetGame<AreaControl>();
 				var newTeam = current.GetTeam( ent );
 
