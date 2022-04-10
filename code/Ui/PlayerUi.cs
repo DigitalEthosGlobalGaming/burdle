@@ -18,6 +18,7 @@ namespace Burdle
 			Player = player;
 			RootPanel.StyleSheet.Load( "/Degg/Ui/Styles/base.scss" );
 			RootPanel.AddChild<ChatBox>();
+			Panels = new List<Panel>();
 			Setup();
 		}
 
@@ -44,15 +45,8 @@ namespace Burdle
 			{
 				playerPanel.SetPlayer( Player );
 			}
+			Panels.Add( newElement );
 			return newElement;
-		}
-
-		public Panel AddPanel(Panel p)
-		{
-			RootPanel.AddChild( p );
-			Panels.Add( p );
-			return p;
-
 		}
 
 
