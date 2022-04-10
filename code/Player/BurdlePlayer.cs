@@ -6,8 +6,11 @@ namespace Burdle
 	public partial class BurdlePlayer : Player
 	{
 
+		public Team MyTeam { get; set; }
+
 		[Net]
 		public BurdleEntity Burdle { get; set; }
+
 
 		[Net]
 		public MinigameBase Gamemode { get; set; }

@@ -9,6 +9,8 @@ namespace Burdle
 		[Net]
 		public MinigameBase Current { get; set; }
 
+		public string CurrentName { get; set; }
+
 		public override void Spawn()
 		{
 			base.Spawn();
@@ -17,6 +19,11 @@ namespace Burdle
 		public T StartGame<T>() where T : MinigameBase, new()
 		{
 			return (T) StartGame( new T() );
+		}
+
+		public MinigameBase RestartGame()
+		{
+			return StartGame( CurrentName );
 		}
 
 		public void RandomGame(int count = 0)
@@ -39,6 +46,7 @@ namespace Burdle
 		public MinigameBase StartGame(string game)
 		{
 			var newGame = Library.Create<MinigameBase>( game );
+			CurrentName = game;
 			return StartGame( newGame );
 		}
 

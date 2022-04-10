@@ -49,6 +49,9 @@ namespace Burdle
 						case "/refresh":
 							caller.CreateBurdle();
 							return;
+						case "/restart":
+							CurrentGame.Minigames.RestartGame();
+							return;
 						default:
 							break;
 					}

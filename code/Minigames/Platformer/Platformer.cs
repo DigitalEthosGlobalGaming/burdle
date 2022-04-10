@@ -115,7 +115,6 @@ namespace Burdle
 			var percentage = diff / total;
 			if ( SpawnPlatform.IsValid )
 			{
-
 				SpawnPlatform.RenderColor = Color.Lerp( Color.Red, Color.White, percentage );
 			}
 		}

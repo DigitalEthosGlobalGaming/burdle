@@ -21,10 +21,20 @@ namespace Burdle
 			Transmit = TransmitType.Always;
 			Players = new Dictionary<long, BurdlePlayer>();
 		}
+		public virtual Vector3 GetSpawnPosition(BurdlePlayer player)
+		{
+			return Vector3.Zero;
+		}
 
 		public virtual void SpawnPlayer(BurdlePlayer player)
 		{
-
+			var spawn = GetSpawnPosition( player );
+			var burdle = player.GetBurdle();
+			if ( burdle?.IsValid() ?? false )
+			{
+				burdle.Velocity = Vector3.Zero;
+				burdle.Position = spawn;
+			}
 		}
 
 		public virtual void SpawnAllPlayers()
@@ -43,6 +53,7 @@ namespace Burdle
 		public virtual void Join( BurdlePlayer player)
 		{
 			Players[player.Client.PlayerId] = player;
+			SpawnPlayer( player );
 		}
 
 		public virtual bool CanStart( )

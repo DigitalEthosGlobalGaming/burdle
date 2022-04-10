@@ -52,6 +52,19 @@ namespace Burdle
 			b.Jump( jumpAngle, power );
 		}
 
+		[ServerCmd]
+		public static void Throw( float yaw, float power )
+		{
+			var b = GetCallerBurdle();
+			if ( b == null )
+			{
+				return;
+			}
+
+			var jumpAngle = Angles.AngleVector( new Angles( 0, yaw, 0 ) );
+			b.Throw( jumpAngle, power );
+		}
+
 	}
 
 

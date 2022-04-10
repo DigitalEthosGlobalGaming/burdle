@@ -9,6 +9,8 @@ namespace Burdle
 	{
 
 		public float JumpPower { get; set; } = 250f;
+
+		public Carriable CarriedItem { get; set; }
 		public ModelEntity Hat { get; set; }
 
 		[Net]
@@ -179,6 +181,31 @@ namespace Burdle
 			ApplyLocalAngularImpulse( Velocity );
 		}
 
+		public void Throw( Vector3 direction, float amount )
+		{
+			if ( CarriedItem?.IsValid() ?? false )
+			{
+				if ( amount > 0.5 )
+				{
+					SoundToPlay = "cute.grunt.long";
+					SoundVolume = 1;
+				}
+				else if ( amount > 0.1 )
+				{
+					SoundToPlay = "cute.grunt.short";
+					SoundVolume = amount;
+				}
+
+				var jumpHeight = 2f;
+				var force = JumpPower;
+
+				direction = Vector3.Up * jumpHeight + direction;
+				var throwForce = (direction * force * amount) + (Velocity / 2);
+				CarriedItem.Throw( throwForce );
+				CarriedItem = null;
+			}
+		}
+
 		[Event.Hotload]
 		public void Hotload()
 		{
@@ -202,6 +229,7 @@ namespace Burdle
 				}
 			}
 		}
+
 
 		protected override void OnDestroy()
 		{
