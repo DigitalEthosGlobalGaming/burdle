@@ -6,7 +6,7 @@ namespace Burdle
 	{
 		public BurdleEntity CarriedBy { get; set; }
 		public bool CanBeStolen { get; set; }
-
+		public bool CanJumpWhileHolding { get; set; }
 		public float CanPickupNext { get; set; }
 
 		public void Throw( Vector3 direction )

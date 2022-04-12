@@ -52,10 +52,12 @@ namespace Burdle
 
 		public override void Start()
 		{
-			End();
+			base.Start();
+			GameDuration = 60f * 4;
 			Name = "Buuurrrrrdle";
 			PlayerCheckerTimer = new Timer( CheckPlayers, 1000f );
 			PlayerCheckerTimer.Start();
+
 
 			CreatePlatforms();
 			foreach ( var kv in Players )

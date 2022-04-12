@@ -152,15 +152,19 @@ namespace Burdle
 			return null;
 		}
 
-		public virtual void Move()
-		{
-			Log.Info( "Test" );
-		}
 		public void Jump(Vector3 direction, float amount)
 		{
 			if ( !CanJump )
 			{
 				return;
+			}
+
+			if (CarriedItem?.IsValid() ?? false)
+			{
+				if (!CarriedItem.CanJumpWhileHolding)
+				{
+					return;
+				}
 			}
 			
 			if (amount > 0.5)

@@ -81,6 +81,7 @@ namespace Burdle
 
 		public virtual void SetScore(string name, float amount)
 		{
+
 			if (Scoreboard == null)
 			{
 				Scoreboard = new Dictionary<string, float>();
@@ -88,6 +89,26 @@ namespace Burdle
 
 			Scoreboard[name] = amount;
 			LastScoreTick = Time.Tick;
+		}
+
+		public void SetPlayerScoresFromTeam()
+		{
+			foreach(var kv in Players)
+			{
+				var team = kv.Value?.MyTeam;
+				if ( team?.IsValid() ?? false)
+				{
+					var score = GetScore( team?.Name );
+					SetScore( kv.Value, score, false);
+				}
+			}
+		}
+
+		public virtual float AddScore( string name, float amount )
+		{
+			var score = GetScore( name ) + amount;
+			SetScore( name, score);
+			return score;
 		}
 
 		public virtual float AddScore(BurdleEntity entity, float amount)

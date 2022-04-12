@@ -15,6 +15,9 @@ namespace Burdle
 
 		public Ball GameBall {get;set;}
 
+		public Team BlueTeam { get; set; }
+		public Team RedTeam { get; set; }
+
 		public Timer PlayerCheckerTimer { get; set; }
 
 		public Vector3 CenterPosition { get; set; }
@@ -25,7 +28,6 @@ namespace Burdle
 
 		public override bool CanStart()
 		{
-			return false;
 			if (BurdleGame.GetAllPlayers().Count >=2)
 			{
 				return true;
@@ -38,6 +40,8 @@ namespace Burdle
 			base.Join( player );
 			var burdle = player.GetBurdle();
 			burdle.GiveRandomHat();
+
+			SetPlayerScoresFromTeam();
 		}
 
 		public override void Start()
@@ -101,11 +105,41 @@ namespace Burdle
 			var height = 8;
 			var startPosition = new Vector3( 0, 0, 500 );
 			
-			var scale = 2;
+			var scale = 1.5f;
 
 			var redTeam = GetTeam( "Red" );
 			var blueTeam = GetTeam( "Blue" );
+			var spacerAmount = 5f;
 			var tileSpacer = 105f;
+			var tileHeight = 100f * scale;
+
+			for ( int y = 0; y < (height / 2); y++ )
+			{
+				var yPos = (tileSpacer / 2 * scale) + (tileSpacer * 2 * y * scale);
+				var xPos = -(tileHeight / 2) - 5f;
+				var zPos = ((tileHeight *2) / 2) + 10f;
+
+				// First edge
+				var position = startPosition + (Vector3.Forward * yPos) + ( Vector3.Right * xPos) + (Vector3.Up * zPos);
+				var platform = Create<Platform>();
+				platform.Rotation = Rotation.From( new Angles(180,0,90) );
+				platform.Position = position;
+				Platforms.Add( platform );
+				platform.Scale = scale;
+				platform.SetType( Platform.PlatformTypes.p2x2Thin);
+				platform.RenderColor = Color.White.WithAlpha( 0.5f );
+
+				// Second Edge
+				xPos = -(tileHeight / 2) + (width * tileSpacer) * scale - 10f;
+				position = startPosition + (Vector3.Forward * yPos) + (Vector3.Right * xPos) + (Vector3.Up * zPos);
+				platform = Create<Platform>();
+				platform.Rotation = Rotation.From( new Angles( 180, 0, 90 ) );
+				platform.Position = position;
+				Platforms.Add( platform );
+				platform.Scale = scale;
+				platform.SetType( Platform.PlatformTypes.p2x2Thin );
+				platform.RenderColor = Color.White.WithAlpha( 0.5f );
+			}
 
 			for ( int i = 0; i < (width * height); i++ )
 			{
@@ -116,23 +150,52 @@ namespace Burdle
 				var yPos = y * tileSpacer * scale;
 
 				var position = startPosition + (Vector3.Forward * xPos) + (Vector3.Right * yPos); 
-				if (x == 0)
-				{
-					redTeam.AddSpawn( position + (Vector3.Up * 100f) );
-				} else if ( x == (height - 1) )
-				{
-					blueTeam.AddSpawn( position + (Vector3.Up * 100f) );
-				}
+
 
 				var platform = Create<Platform>();
 				platform.Position = position;
 				Platforms.Add( platform );
 				platform.Scale = scale;
+
+				if ( x == 0 )
+				{
+					redTeam.AddSpawn( position + (Vector3.Up * 100f) );
+					platform.RenderColor = Color.Lerp( Color.White, Color.Red, 0.5f );
+				}
+				else if ( x == (height - 1) )
+				{
+					blueTeam.AddSpawn( position + (Vector3.Up * 100f) );
+					platform.RenderColor = Color.Lerp( Color.White, Color.Blue, 0.5f );
+				}
 			}
 
 			CenterPosition = startPosition;
-			CenterPosition = CenterPosition + (Vector3.Forward * (height * (tileSpacer * scale) / 2));
-			CenterPosition = CenterPosition + (Vector3.Right * (width * (tileSpacer * scale) / 2));
+			var centerX = Vector3.Right * ((width * (tileHeight + spacerAmount) / 2) - ((tileHeight + spacerAmount) / 2));
+			var centerY = Vector3.Forward * ((height * (tileHeight + spacerAmount) / 2) - ((tileHeight + spacerAmount) / 2));
+			CenterPosition = startPosition + centerX + centerY;
+
+			var redTarget = Create<Target>();
+			redTarget.Scale = scale;
+			redTarget.Position = centerX + startPosition + (Vector3.Up * (tileHeight / 2)) - (Vector3.Forward * tileHeight / 2);
+			redTarget.RenderColor = Color.Red.WithAlpha( 0.5f );
+			redTarget.Rotation = Rotation.From( new Angles( 0, 90, 90 ) );
+			redTarget.SetType( Platform.PlatformTypes.p2x1Thin );
+			redTarget.MyTeam = redTeam;
+			Platforms.Add( redTarget );
+
+			var blueTarget = Create<Target>();
+			blueTarget.Scale = scale;
+			blueTarget.Position = centerX + (Vector3.Forward * tileHeight / 2) + startPosition + (Vector3.Up * (tileHeight / 2)) + (centerY * 2);
+			blueTarget.RenderColor = Color.Blue.WithAlpha(0.5f);
+			blueTarget.Rotation = Rotation.From( new Angles( 0, 90, 90 ) );
+			blueTarget.SetType( Platform.PlatformTypes.p2x1Thin );
+			blueTarget.MyTeam = blueTeam;
+			Platforms.Add( blueTarget );
+
+			SetScore( blueTeam.Name, 0 );
+			BlueTeam = blueTeam;
+			SetScore( redTeam.Name, 0 );
+			RedTeam = redTeam;
 		}
 
 		public void ResetBall()
@@ -145,13 +208,6 @@ namespace Burdle
 
 		public void CheckPlayers( Timer t )
 		{
-
-			var redScore = 0;
-			var blueScore = 0;
-
-			SetScore( "Red", redScore );
-			SetScore( "Blue", blueScore );
-
 			foreach ( var kv in Players )
 			{
 				var player = kv.Value;
@@ -163,6 +219,7 @@ namespace Burdle
 					}
 				}
 			}
+
 			if ( GameBall?.IsValid() ?? false)
 			{
 				if ( GameBall.Position.z < 0 )
@@ -170,6 +227,18 @@ namespace Burdle
 					ResetBall();
 				}
 			}
+		}
+
+		public void OnScore( Target target )
+		{
+			var scoringTeam = BlueTeam;
+			if (target.MyTeam == BlueTeam) {
+				scoringTeam = RedTeam;
+			}
+
+			AddScore( scoringTeam.Name, 1 );
+			SetPlayerScoresFromTeam();
+			ResetBall();
 		}
 
 

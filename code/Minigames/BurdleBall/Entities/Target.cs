@@ -4,13 +4,22 @@ namespace Burdle
 {
 	public partial class Target : Platform
 	{
+		public Team MyTeam { get; set; }
 		public override void Spawn()
 		{
 			base.Spawn();
-			SetModelAndPhysics( "models/citizen_props/beachball.vmdl", PhysicsMotionType.Dynamic );
-			Rotation = Rotation.FromAxis( Vector3.Forward, 90f );
 		}
 
-
+		public override void StartTouch( Entity other )
+		{
+			base.StartTouch( other );
+			var game = GetGame<BurdleBall>();
+			if ( game != null ) {
+				if ( other is Ball )
+				{
+					game.OnScore( this );
+				}
+			}
+		}
 	}
 }

@@ -1,0 +1,5 @@
+C:\Program Files (x86)\Steam\steamapps\common\sbox\addons\blurdle\code\obj\Debug\burdle.csproj.AssemblyReference.cache
+C:\Program Files (x86)\Steam\steamapps\common\sbox\addons\blurdle\code\obj\Debug\burdle.GeneratedMSBuildEditorConfig.editorconfig
+C:\Program Files (x86)\Steam\steamapps\common\sbox\addons\blurdle\code\obj\Debug\burdle.AssemblyInfoInputs.cache
+C:\Program Files (x86)\Steam\steamapps\common\sbox\addons\blurdle\code\obj\Debug\burdle.AssemblyInfo.cs
+C:\Program Files (x86)\Steam\steamapps\common\sbox\addons\blurdle\code\obj\Debug\burdle.csproj.CoreCompileInputs.cache
