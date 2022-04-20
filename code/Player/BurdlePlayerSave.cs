@@ -26,6 +26,10 @@ namespace Burdle
 
 		public void AddItem(BurdleStoreItem item)
 		{
+			if ( Items  == null)
+			{
+				Items = new List<BurdleStoreItem>();
+			}
 			var newList = new List<BurdleStoreItem>();
 			foreach(var i in Items)
 			{
@@ -42,7 +46,7 @@ namespace Burdle
 			{
 				Items = JsonSerializer.Deserialize<List<BurdleStoreItem>>( ItemsData );
 			}
-			return Items;
+			return Items ?? new List<BurdleStoreItem>();
 		}
 	}
 }

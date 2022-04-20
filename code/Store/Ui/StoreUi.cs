@@ -30,6 +30,10 @@ namespace Burdle
 			Nav?.Delete(true);
 			Nav = AddChild<NavPanel>();
 			Nav.AddPage<HatsPage>( "Hats" );
+			if ( Local.Client.IsListenServerHost )
+			{
+				Nav.AddPage<AdminPage>( "Admin" );
+			}
 		}
 
 		public void CloseMenu()

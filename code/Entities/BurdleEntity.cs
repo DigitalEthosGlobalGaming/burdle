@@ -20,6 +20,12 @@ namespace Burdle
 			this.SetupPhysicsFromModel( motionType );
 		}
 
+		public void RefreshPhysics(PhysicsMotionType motionType = PhysicsMotionType.Static )
+		{
+			this.SetupPhysicsFromModel( motionType );
+		}
+
+
 		public override void StartTouch( Entity other )
 		{
 			if ( other is BurdleEntity burdle )

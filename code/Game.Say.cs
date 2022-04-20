@@ -26,7 +26,8 @@ namespace Burdle
 				return;
 			}
 
-			caller.SetData( "chats", caller.GetData<float>( "chats", 0 ) + 1 );
+
+			var isHost = caller.Client.IsListenServerHost;
 
 			if (message.StartsWith("/"))
 			{
@@ -35,18 +36,23 @@ namespace Burdle
 				{
 					switch ( parts[0] )
 					{
+						
 						case "/game":
-							if ( parts.Length > 1 )
+							if ( !isHost )
 							{
-								if ( parts[1] == "random" )
-								{
-									CurrentGame.Minigames.RandomGame();
-								}
-								else
-								{
-									CurrentGame.Minigames.StartGame( parts[1] );
-								}
+								return;
 							}
+								if ( parts.Length > 1 )
+								{
+									if ( parts[1] == "random" )
+									{
+										CurrentGame.Minigames.RandomGame();
+									}
+									else
+									{
+										CurrentGame.Minigames.StartGame( parts[1], true );
+									}
+								}
 
 							return;
 						case "/refresh":
@@ -54,25 +60,32 @@ namespace Burdle
 							return;
 
 						case "/load":
+							if ( !isHost )
+							{
+								return;
+							}
 							caller.Load<BurdlePlayerSave>("burdle");
 							return;
-						case "/cheat":
-							caller.GiveBurds( 10000 );
-
-							return;
-
 						case "/restart":
+							if ( !isHost )
+							{
+								return;
+							}
 							CurrentGame.Minigames.RestartGame();
 							return;
 						case "/degg":
-							string username = "";
-							string password = "";
-							if (parts.Length > 2)
+							if ( !isHost )
 							{
-								username = parts[1];
-								password = parts[2];
+								return;
 							}
-							CurrentGame.SetupWebsocket(username, password );
+							string username = "";
+								string password = "";
+								if ( parts.Length > 2 )
+								{
+									username = parts[1];
+									password = parts[2];
+								}
+								CurrentGame.SetupWebsocket( username, password );
 							return;
 						default:
 							break;

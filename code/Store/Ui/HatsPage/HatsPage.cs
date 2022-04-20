@@ -1,8 +1,6 @@
 ﻿using Degg.Ui.Elements;
-using Degg.UI.Elements;
-using Degg.Util;
+
 using Sandbox;
-using Sandbox.UI;
 using System.Collections.Generic;
 
 namespace Burdle
@@ -13,8 +11,8 @@ namespace Burdle
 
 		public HatsPage()
 		{
-			SetTemplate( "/Store/Ui/HatsPage.html" );
-			StyleSheet.Load( "/Store/Ui/HatsPage.scss" );
+			SetTemplate( "/Store/Ui/HatsPage/HatsPage.html" );
+			StyleSheet.Load( "/Store/Ui/HatsPage/HatsPage.scss" );
 			AddClass( "hats-page" );
 			Items = new List<HatPreview>();
 

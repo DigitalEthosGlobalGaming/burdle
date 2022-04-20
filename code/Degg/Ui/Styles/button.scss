@@ -1,9 +1,9 @@
 ﻿@import "variables.scss";
 
 .button {
-    background-color: $c-primary;
+    background-color: $c-secondary-700;
     cursor: pointer;
-    color: rgba(0,0,0,0.9);
+    color: rgba(255,255,255,0.9);
     font-weight: bold;
     font-size: $font-size-medium;
     padding-left: $size-md;
@@ -14,13 +14,12 @@
     border-radius: $border-radius;
 
     &:Hover, &.focus {
-        background-color: $c-secondary;
-        color: rgba(0,0,0,0.80);
+        background-color: $c-secondary-400;
     }
 
     &.active {
-        background-color: $c-secondary;
-        color: rgba(0,0,0,0.90);
+        background-color: $c-secondary-500;
+        color: rgba(255,255,255,0.90);
     }
 }
 

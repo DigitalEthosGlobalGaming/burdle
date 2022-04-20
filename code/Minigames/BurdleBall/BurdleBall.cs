@@ -26,13 +26,11 @@ namespace Burdle
 
 		public override bool CanStart()
 		{
-			return true;
-			/*if (BurdleGame.GetAllPlayers().Count >=2)
+			if (BurdleGame.GetAllPlayers().Count >=2)
 			{
 				return true;
 			}
 			return false;
-			*/
 		}
 
 		public override void Join( BurdlePlayer player )

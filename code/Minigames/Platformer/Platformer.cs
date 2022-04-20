@@ -67,7 +67,6 @@ namespace Burdle
 			}
 
 			NextPlatform = new TargetPlatform();
-			NextPlatform.SetModelAndPhysics( "degg/models/simple/platform.vmdl" );
 
 			var direction = Rand.Float( 0, 360 );
 
@@ -79,9 +78,8 @@ namespace Burdle
 
 			NextPlatform.Rotation = rotation;
 
-
-
 			NextPlatform.Position = SpawnPlatform.Position + position;
+			NextPlatform.SetModelAndPhysics( "degg/models/simple/platform.vmdl" );
 
 			NextPlatformSpawn = Time.Now + 5f;
 
