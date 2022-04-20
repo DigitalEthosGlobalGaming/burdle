@@ -7,11 +7,8 @@ namespace Burdle
 {
 	public partial class BurdleEntity: ModelEntity
 	{
-
 		public float JumpPower { get; set; } = 250f;
-
 		public Carriable CarriedItem { get; set; }
-		public ModelEntity Hat { get; set; }
 
 		[Net]
 		public bool CanJump { get; set; }
@@ -53,36 +50,6 @@ namespace Burdle
 				SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 			}
 			CreateWorldUi(true);
-		}
-		public void GiveRandomHat()
-		{
-			UpdatModel();
-
-			var hatsList = new List<string>();
-			hatsList.Add( "models/citizen_clothes/hat/hat_leathercap.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_hardhat.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat.tophat.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_beret.black.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_beret.red.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_cap.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_leathercapnobadge.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_service.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_uniform.police.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_woolly.vmdl" );
-			hatsList.Add( "models/citizen_clothes/hat/hat_woollybobble.vmdl" );
-
-			if (Hat.IsValid())
-			{
-				Hat.Delete();
-			}
-
-			var hat = Create<ModelEntity>();
-			hat.SetParent( this );
-			hat.SetModel( Rand.FromList( hatsList ) );
-			hat.Transmit = TransmitType.Always;
-			Hat = hat;
-			Hat.Rotation = Rotation;
-			Hat.Position = this.Position - (Rotation.Down * -50f);
 		}
 		
 		[Event.Tick.Server]
@@ -165,6 +132,15 @@ namespace Burdle
 				{
 					return;
 				}
+			}
+
+			var owner = GetPlayer();
+			var saveData = owner.GetSaveData<BurdlePlayerSave>();
+			if ( saveData != null )
+			{
+				saveData.TotalJumps = saveData.TotalJumps + 1;
+				saveData.Burds = saveData.Burds + amount;
+				saveData.Save();
 			}
 			
 			if (amount > 0.5)

@@ -57,6 +57,7 @@ namespace Burdle
 				var players = All.OfType<BurdlePlayer>();
 				foreach ( var player in players.ToList() )
 				{
+					Log.Info( player );
 					player.JoinGame( Current );
 				}
 			}

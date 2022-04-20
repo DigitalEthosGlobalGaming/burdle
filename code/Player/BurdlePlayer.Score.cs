@@ -3,7 +3,7 @@ using Sandbox;
 
 namespace Burdle
 {
-	public partial class BurdlePlayer : Player
+	public partial class BurdlePlayer
 	{
 		public float AddScore(float amount)
 		{

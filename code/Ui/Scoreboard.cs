@@ -31,43 +31,46 @@ namespace Burdle
 		{
 			var items = new PriorityQueue<string, float>();
 			var gamemode = GetPlayer()?.Gamemode;
-			var scores = gamemode.Scoreboard;
-			CurrentGame.Text = gamemode.Name;
-			if (scores != null)
+			if ( gamemode?.IsValid() ?? false )
 			{
-				foreach(var score in scores)
+				var scores = gamemode.Scoreboard;
+				CurrentGame.Text = gamemode.Name;
+				if ( scores != null )
 				{
-					items.Enqueue( score.Key, score.Value );
+					foreach ( var score in scores )
+					{
+						items.Enqueue( score.Key, score.Value );
+					}
 				}
-			}
-			if ( Scores != null )
-			{
-				foreach ( var scorePanel in Scores )
+				if ( Scores != null )
 				{
-					scorePanel.Delete( true );
+					foreach ( var scorePanel in Scores )
+					{
+						scorePanel.Delete( true );
+					}
 				}
-			}
 
-			Scores = new List<Panel>();
-			ScoreContainer.DeleteChildren( true );
+				Scores = new List<Panel>();
+				ScoreContainer.DeleteChildren( true );
 
-			var position = items.Count;
-			while (items.TryDequeue(out var name, out var amount))
-			{				
-				var panel = ScoreContainer.AddChild<Panel>();
-				panel.AddClass( "score-item" );
+				var position = items.Count;
+				while ( items.TryDequeue( out var name, out var amount ) )
+				{
+					var panel = ScoreContainer.AddChild<Panel>();
+					panel.AddClass( "score-item" );
 
-				var namePanel = panel.AddChild<Panel>();
-				namePanel.AddClass( "amount" );
-				var nameLabel = namePanel.AddChild<Label>();
-				nameLabel.AddClass( "name" );
-				nameLabel.SetText( $"{position.ToString()} | {name}");
+					var namePanel = panel.AddChild<Panel>();
+					namePanel.AddClass( "amount" );
+					var nameLabel = namePanel.AddChild<Label>();
+					nameLabel.AddClass( "name" );
+					nameLabel.SetText( $"{position.ToString()} | {name}" );
 
-				var scorePanel = panel.AddChild<Panel>();
-				scorePanel.AddClass( "amount" );
-				var scoreLabel = scorePanel.AddChild<Label>();
-				scoreLabel.SetText( amount.ToString() );
-				position = position - 1;
+					var scorePanel = panel.AddChild<Panel>();
+					scorePanel.AddClass( "amount" );
+					var scoreLabel = scorePanel.AddChild<Label>();
+					scoreLabel.SetText( amount.ToString() );
+					position = position - 1;
+				}
 			}
 
 		}

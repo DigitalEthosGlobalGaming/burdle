@@ -36,6 +36,8 @@ namespace Burdle
 			AddPanel<GameTimerUi>();
 			AddPanel<Burdle.Scoreboard>();
 			AddPanel<PlayerScore>();
+			AddPanel<MoneyContainer>();
+			AddPanel<StoreUi>();
 		}
 
 		public T AddPanel<T>() where T: Panel, new()

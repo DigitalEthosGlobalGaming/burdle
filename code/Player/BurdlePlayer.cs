@@ -1,16 +1,15 @@
 ﻿using Degg.Cameras;
+using Degg.Core;
 using Sandbox;
 
 namespace Burdle
 {
-	public partial class BurdlePlayer : Player
+	public partial class BurdlePlayer : DeggPlayer
 	{
-
 		public Team MyTeam { get; set; }
 
 		[Net]
 		public BurdleEntity Burdle { get; set; }
-
 
 		[Net]
 		public MinigameBase Gamemode { get; set; }
@@ -31,9 +30,6 @@ namespace Burdle
 			Animator = new BurdleAnimator();
 			CreateBurdle();
 		}
-
-
-
 
 		public BurdleEntity GetBurdle()
 		{

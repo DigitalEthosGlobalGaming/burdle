@@ -1,0 +1,32 @@
+﻿@import "../Degg/Ui/Styles/variables.scss";
+
+.player-score-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.player-score {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-family: $font-base;
+    font-size: $font-size-medium;
+    color: yellow;
+    background-color: $c-primary-500;
+    border-left-color: $c-primary-800;
+    border-left-width: 3px;
+    border-top-color: $c-primary-800;
+    border-top-width: 3px;
+    border-top-left-radius: $border-radius;
+    font-weight: bold;
+    padding: 16px;
+    transition: all 0.1s ease-in-out;
+}
+
+.score-new {
+    transition: none;
+    font-size: $font-size-large;
+}

@@ -9,8 +9,6 @@ namespace Burdle
 	[Library]
 	public partial class BurdleBall : MinigameTeamBase
 	{
-
-
 		public List<Platform> Platforms { get; set; }
 
 		public Ball GameBall {get;set;}
@@ -28,19 +26,19 @@ namespace Burdle
 
 		public override bool CanStart()
 		{
-			if (BurdleGame.GetAllPlayers().Count >=2)
+			return true;
+			/*if (BurdleGame.GetAllPlayers().Count >=2)
 			{
 				return true;
 			}
 			return false;
+			*/
 		}
 
 		public override void Join( BurdlePlayer player )
 		{
 			base.Join( player );
 			var burdle = player.GetBurdle();
-			burdle.GiveRandomHat();
-
 			SetPlayerScoresFromTeam();
 		}
 

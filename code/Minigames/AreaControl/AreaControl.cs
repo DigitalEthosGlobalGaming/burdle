@@ -92,7 +92,6 @@ namespace Burdle
 		{
 			base.Join( player );
 			var burdle = player.GetBurdle();
-			burdle.GiveRandomHat();
 			player.Client.SetInt( "team", 0 );
 		}
 

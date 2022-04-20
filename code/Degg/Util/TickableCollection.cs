@@ -14,13 +14,13 @@ namespace Degg.Utils
 
 	public partial class Timer: ITickable
 	{
-		public float Interval { get; private set; }
-		public float NextTick { get; private set; }
-		public float LastTick { get; private set; }
-		public float CurrentTick { get; private set; }
-		public float Delta { get; private set; }
-		public bool IsStarted { get; private set; }
-		public Action<Timer> Callback { get; private set; }
+		public float Interval { get; protected set; }
+		public float NextTick { get; protected set; }
+		public float LastTick { get; protected set; }
+		public float CurrentTick { get; protected set; }
+		public float Delta { get; protected set; }
+		public bool IsStarted { get; protected set; }
+		public Action<Timer> Callback { get; protected set; }
 		public TickableCollection ParentCollection { get; set; }
 
 		public Timer( Action<Timer> callback, float interval )
@@ -28,6 +28,9 @@ namespace Degg.Utils
 			TickableCollection.Global.Add( this );
 			Interval = interval;
 			Callback = callback;
+		}
+		public Timer()
+		{
 		}
 
 		public void Delete()
@@ -84,6 +87,25 @@ namespace Degg.Utils
 			}
 		}
 	}
+
+	public partial class DelayedCallback : Timer
+	{
+
+		public DelayedCallback( Action<Timer> callback, float interval )
+		{
+			TickableCollection.Global.Add( this );
+			Interval = interval;
+			Callback = (Timer t) =>
+			{
+				Delete();
+				if ( callback != null )
+				{
+					callback( t );
+				}
+			};
+		}
+	}
+
 	public partial class TickableCollection
 	{
 		public static TickableCollection Global = new TickableCollection();

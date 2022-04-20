@@ -17,9 +17,7 @@ namespace Burdle
 		public float PlatformSpawnTime { get; set; }
 		public override void SpawnPlayer(BurdlePlayer player)
 		{
-			var burdle = player.GetBurdle();
-			burdle.GiveRandomHat();
-			burdle.Velocity = Vector3.Zero;
+			var burdle = player.GetBurdle();			burdle.Velocity = Vector3.Zero;
 			burdle.Position = SpawnPlatform.Position + Vector3.Up * 50f;
 			player.Client.SetInt( "score", 0 );
 		}

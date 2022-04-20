@@ -10,7 +10,18 @@ namespace Degg.Ui.Elements
 
 		protected T Player { get; set; }
 
-
+		public A GetClientPawn<A>() where A: Entity
+		{
+			if (Local.Client?.Pawn?.IsValid() ?? false)
+			{
+				var pawn = Local.Client.Pawn;
+				if (pawn is A)
+				{
+					return (A)pawn;
+				}
+			}
+			return null;
+		}
 		public T GetPlayer()
 		{
 			return Player;

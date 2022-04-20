@@ -1,6 +1,7 @@
 ﻿
 using Degg;
 using Degg.Util;
+using Degg.Websocket;
 using Sandbox;
 using Sandbox.UI;
 
@@ -24,6 +25,8 @@ namespace Burdle
 			if ( !(caller?.IsValid() ?? false)) {
 				return;
 			}
+
+			caller.SetData( "chats", caller.GetData<float>( "chats", 0 ) + 1 );
 
 			if (message.StartsWith("/"))
 			{
@@ -49,8 +52,27 @@ namespace Burdle
 						case "/refresh":
 							caller.CreateBurdle();
 							return;
+
+						case "/load":
+							caller.Load<BurdlePlayerSave>("burdle");
+							return;
+						case "/cheat":
+							caller.GiveBurds( 10000 );
+
+							return;
+
 						case "/restart":
 							CurrentGame.Minigames.RestartGame();
+							return;
+						case "/degg":
+							string username = "";
+							string password = "";
+							if (parts.Length > 2)
+							{
+								username = parts[1];
+								password = parts[2];
+							}
+							CurrentGame.SetupWebsocket(username, password );
 							return;
 						default:
 							break;

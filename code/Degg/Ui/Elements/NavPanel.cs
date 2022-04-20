@@ -9,7 +9,6 @@ namespace Degg.UI.Elements
 	{
 		public Panel Base { get; set; }
 		public Panel NavBar { get; set; }
-		public Panel CurrentPage { get; set; }
 
 		public int Page { get; set; }
 

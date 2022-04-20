@@ -17,7 +17,7 @@ namespace Burdle
 		public override void Tick()
 		{
 			base.Tick();
-			var current = BurdleGame.CurrentGame.Minigames.Current;
+			var current = BurdleGame.CurrentGame?.Minigames?.Current;
 			if ( current != null )
 			{
 				var hasTimer = current.GameEndTime > 0;

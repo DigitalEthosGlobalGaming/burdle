@@ -1,11 +1,9 @@
-﻿using Burdle;
-using Degg.Cameras;
-using Sandbox;
-using System;
+﻿using Sandbox;
+
 
 namespace Burdle
 {
-	public partial class BurdlePlayer : Sandbox.Player
+	public partial class BurdlePlayer
 	{
 
 		public static BurdlePlayer GetCallerBurdlePlayer()

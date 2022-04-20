@@ -25,6 +25,7 @@ namespace Burdle
 
 			if ( Player?.IsValid() ?? false )
 			{
+				var chats = Player.Client.GetValue<float>( "chats" ).ToString();
 				if ( Score != null )
 				{
 					var score = Player.GetScore();
@@ -44,7 +45,7 @@ namespace Burdle
 					{
 						ScoreContainer.SetClass( "score-new", newScore );
 					}
-					Score.Text = score.ToString();
+					Score.Text = $"{score.ToString()} - {chats}";
 				}
 			}
 		}

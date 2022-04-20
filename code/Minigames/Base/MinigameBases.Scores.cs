@@ -37,7 +37,14 @@ namespace Burdle
 
 		public virtual float GetScore( BurdlePlayer player )
 		{
-			return player.Client.GetValue<float>( "score", 0 );
+			if ( player?.IsValid() ?? false )
+			{
+				if ( player?.Client?.IsValid() ?? false )
+				{
+					return player.Client.GetValue<float>( "score", 0 );
+				}
+			}
+			return 0;
 		}
 
 		public virtual void SetScore( BurdleEntity entity, float score )
