@@ -18,7 +18,7 @@ namespace Burdle
 
 		public PlayerUi HudPanel { get; protected set; }
 
-		[BindComponent] public FollowCamera Camera { get; set; }
+		[BindComponent] public CameraMode Camera { get; set; }
 
 		public override void Respawn()
 		{
@@ -66,16 +66,22 @@ namespace Burdle
 				Burdle.Delete();
 			}
 
-			if (Camera != null)
-			{
-				Components.Remove( Camera );
-			}
-
-			Camera = Components.Create<FollowCamera>();
+			SetCamera<FollowCamera>();
 
 			Burdle = Create<BurdleEntity>();
 			Burdle.Owner = this;
 			Burdle.UpdatModel();
+		}
+
+		public T SetCamera<T>() where T: CameraMode, new()
+		{
+			if ( Camera != null )
+			{
+				Components.Remove( Camera );
+			}
+
+			Camera = Components.Create<T>();
+			return (T) Camera;
 		}
 		public override void ClientSpawn()
 		{

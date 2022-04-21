@@ -1,4 +1,5 @@
-﻿using Degg.Util;
+﻿using Degg.Cameras;
+using Degg.Util;
 using Degg.Utils;
 using Sandbox;
 using System;
@@ -41,6 +42,14 @@ namespace Burdle
 			burdle.Velocity = Vector3.Zero;
 			burdle.Position = platform.Position + Vector3.Up * 50f;
 		}
+		public override void Init()
+		{
+			base.Init();
+			Name = "Buuurrrrrdle";
+			var round = AddRound<MinigameRound>();
+			round.Name = Name;
+			round.Duration = 60 * 5f;
+		}
 
 		public override void Join( BurdlePlayer player )
 		{
@@ -51,14 +60,11 @@ namespace Burdle
 
 		public override void Start()
 		{
+			CreatePlatforms();
 			base.Start();
-			GameDuration = 60f * 4;
-			Name = "Buuurrrrrdle";
 			PlayerCheckerTimer = new Timer( CheckPlayers, 1000f );
 			PlayerCheckerTimer.Start();
-
-
-			CreatePlatforms();
+			
 			foreach ( var kv in Players )
 			{
 				var player = kv.Value;
@@ -68,10 +74,13 @@ namespace Burdle
 					player.Respawn();
 				}
 			}
-		}
 
-		public override void End()
+
+
+		}
+		public override void Cleanup()
 		{
+			base.Cleanup();
 			if ( PlayerCheckerTimer != null)
 			{
 				PlayerCheckerTimer.Delete();
@@ -92,14 +101,10 @@ namespace Burdle
 			}
 		}
 
-		protected override void OnDestroy()
-		{
-			End();
-			base.OnDestroy();			
-		}
-
 		public void CreatePlatforms()
 		{
+			LoadingScene = new CinematicScene();
+
 			Platforms = new List<RacePlatform>();
 			WinningPlatform = new RacePlatform();
 			WinningPlatform.Index = -1;
@@ -110,6 +115,7 @@ namespace Burdle
 			var tiles = Rand.Int( 5, 20);
 			var currentPosition = new Vector3( 0, 0, 500 );
 			MinimumHeight = float.MaxValue;
+			var maxHeight = float.MinValue;
 
 			for ( int i = 0; i < tiles; i++ )
 			{
@@ -132,6 +138,11 @@ namespace Burdle
 					MinimumHeight = currentPosition.z;
 				}
 
+				if (currentPosition.z > maxHeight )
+				{
+					maxHeight = currentPosition.z;
+				}
+
 				if (i == 0)
 				{
 					platform.RenderColor = Color.Blue;
@@ -139,8 +150,26 @@ namespace Burdle
 				{
 					platform.RenderColor = Color.Green;
 				}
-					
-				
+			}
+
+			var firstPlatform = Platforms[0];
+			var lastPlatform = Platforms[Platforms.Count - 1];
+
+			var transition = LoadingScene.AddTransition<MovementTransition>();
+			transition.Duration = 5f;
+			transition.Target = firstPlatform;
+			maxHeight = maxHeight + 100f;
+			transition.StartPosition = lastPlatform.Position.WithZ( maxHeight );;
+			transition.EndPosition = firstPlatform.Position.WithZ( maxHeight );
+			LoadingScene.AddTransition( transition );
+		}
+
+		public override void OnRoundStart( MinigameRound r )
+		{
+			base.OnRoundStart( r );
+			if (r is GameStartRound round)
+			{
+				round.Duration = 5f;
 			}
 		}
 

@@ -119,9 +119,28 @@ namespace Burdle
 			return null;
 		}
 
+		public MinigameBase GetMinigame()
+		{
+			var player = GetPlayer();
+			if ( (player?.IsValid() ?? false) && (player?.Gamemode?.IsValid() ?? false) )
+			{
+				return player?.Gamemode;
+			}
+			return null;
+		}
+
+		public bool CheckCanJump()
+		{
+			if ( GetMinigame()?.IsGameLoading() ?? true)
+			{
+				return false;
+			}
+			return CanJump;
+		}
+
 		public void Jump(Vector3 direction, float amount)
 		{
-			if ( !CanJump )
+			if ( !CheckCanJump() )
 			{
 				return;
 			}

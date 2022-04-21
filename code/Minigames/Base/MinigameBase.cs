@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Degg.Cameras;
+using Sandbox;
 using System.Collections.Generic;
 
 namespace Burdle
@@ -8,6 +9,9 @@ namespace Burdle
 		public Dictionary<long, BurdlePlayer> Players { get; set; }
 
 		[Net]
+		public Vector3 GamemodeCenter { get; set; }
+
+		[Net]
 		public float GameEndTime { get; set; }
 		[Net]
 		public float GameDuration { get; set; }
@@ -15,11 +19,26 @@ namespace Burdle
 		[Net]
 		public float GameStartTime { get; set; }
 
+		public float WarmupTime { get; set; }
+
+		public bool IsEnded = false;
+
+		public CinematicScene LoadingScene { get; set; }
+
 		public override void Spawn()
 		{
 			Name = "Game";
 			Transmit = TransmitType.Always;
 			Players = new Dictionary<long, BurdlePlayer>();
+			if ( IsServer )
+			{
+				Init();
+			}
+		}
+
+		public virtual void Init()
+		{
+			GamemodeCenter = new Vector3( 0, 0, 1000 );
 		}
 		public virtual Vector3 GetSpawnPosition(BurdlePlayer player)
 		{
@@ -28,6 +47,7 @@ namespace Burdle
 
 		public virtual void SpawnPlayer(BurdlePlayer player)
 		{
+			var round = GetRound();
 			var spawn = GetSpawnPosition( player );
 			var burdle = player.GetBurdle();
 			if ( burdle?.IsValid() ?? false )
@@ -35,6 +55,8 @@ namespace Burdle
 				burdle.Velocity = Vector3.Zero;
 				burdle.Position = spawn;
 			}
+
+			GetRound()?.OnPlayerSpawn( player );
 		}
 
 		public virtual void SpawnAllPlayers()
@@ -45,14 +67,11 @@ namespace Burdle
 			}
 		}
 
-		public void SetGameDuration(float a)
-		{
-			GameDuration = a;
-		}
 
 		public virtual void Join( BurdlePlayer player)
 		{
 			Players[player.Client.PlayerId] = player;
+			GetRound()?.Join( player );
 			SpawnPlayer( player );
 		}
 
@@ -63,6 +82,7 @@ namespace Burdle
 		public virtual void Leave( BurdlePlayer player )
 		{
 			Players.Remove( player.Client.PlayerId );
+			GetRound()?.Leave( player );
 		}
 
 
@@ -74,27 +94,53 @@ namespace Burdle
 
 		public virtual void Tick()
 		{
-			if ( GameDuration > 0) {
-				if (GameStartTime == -1 ) {
-					GameStartTime = Time.Now;
-					GameEndTime = GameStartTime + GameDuration;
-				}
-
-				if (GameEndTime < Time.Now)
-				{
-					BurdleGame.CurrentGame.Minigames.RandomGame();
-				}
+			if (CurrentRound != null)
+			{
+				CurrentRound.Tick();
 			}
 		}
 		public virtual void Start()
 		{
-			GameStartTime = -1;
-			GameEndTime = -1;
+			SetupRounds();
+			NextRound();
 			SetupScoreboard();
 		}
-		public virtual void End()
+
+		public void End()
 		{
+			if (IsClient)
+			{
+				return;
+			}
+			if ( IsEnded )
+			{
+				return;
+			}
+			IsEnded = true;
+			Cleanup();
+
+			BurdleGame.CurrentGame.Minigames.RandomGame();
+		}
+
+		public virtual void Cleanup()
+		{
+			DeleteAllRounds();
+			if ( LoadingScene?.IsValid() ?? false )
+			{
+				LoadingScene?.Delete();
+			}
+		}
+
+		protected override void OnDestroy()
+		{
+			if ( IsServer )
+			{
+				Cleanup();
+			}
+			base.OnDestroy();
 
 		}
+
+
 	}
 }

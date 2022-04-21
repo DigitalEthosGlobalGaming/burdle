@@ -17,32 +17,35 @@ namespace Burdle
 		public float PlatformSpawnTime { get; set; }
 		public override void SpawnPlayer(BurdlePlayer player)
 		{
-			var burdle = player.GetBurdle();			burdle.Velocity = Vector3.Zero;
-			burdle.Position = SpawnPlatform.Position + Vector3.Up * 50f;
+			base.SpawnPlayer( player );
 			player.Client.SetInt( "score", 0 );
+		}
+
+		public override Vector3 GetSpawnPosition( BurdlePlayer player )
+		{
+			return SpawnPlatform.Position + Vector3.Up * 50f;
+		}
+
+		public override void Init()
+		{
+			base.Init();
+			PlatformSpawnTime = 3f;
+			Name = "Target Burd";
+			var round = AddRound<MinigameRound>();
+			round.Name = Name;
+			round.Duration = 60 * 5f;
 		}
 		public override void Start()
 		{
 			base.Start();
-			GameDuration = 60f * 3;
-			PlatformSpawnTime = 3f;
-			End();
-			Name = "Target Burd";
 			CreatePlatforms();
 		}
 
-		public override void End()
-		{
+		public override void Cleanup()
+		{			
 			SpawnPlatform?.Delete();
 			NextPlatform?.Delete();
 		}
-
-		protected override void OnDestroy()
-		{
-			End();
-			base.OnDestroy();			
-		}
-
 		public override void SetScore( string name, float score )
 		{
 			var current = GetScore( name );
@@ -50,6 +53,13 @@ namespace Burdle
 			{
 				base.SetScore( name, score );
 			}
+		}
+
+
+		public override void OnRoundStart( MinigameRound r )
+		{
+			base.OnRoundStart( r );
+			NextPlatformSpawn = Time.Now + 5f;
 		}
 
 		public void CreatePlatforms()
@@ -98,6 +108,12 @@ namespace Burdle
 
 		public override void Tick()
 		{
+			base.Tick();
+			if (IsGameLoading())
+			{
+				return;
+			}
+
 			var now = Time.Now;
 			if ( now > NextPlatformSpawn )
 			{

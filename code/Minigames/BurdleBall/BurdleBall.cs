@@ -40,15 +40,20 @@ namespace Burdle
 			SetPlayerScoresFromTeam();
 		}
 
+		public override void Init()
+		{
+			base.Init();
+			Name = "Burdle Ball";
+			var round = AddRound<MinigameRound>();
+			round.Name = Name;
+			round.Duration = 60 * 5f;
+		}
+
 		public override void Start()
 		{
 			base.Start();
 			AddTeam( "Red" );
 			AddTeam( "Blue" );
-
-			GameDuration = 60f * 4;
-
-			Name = "Burdle Ball";
 			PlayerCheckerTimer = new Timer( CheckPlayers, 1000f );
 			PlayerCheckerTimer.Start();
 
@@ -66,7 +71,7 @@ namespace Burdle
 			ResetBall();
 		}
 
-		public override void End()
+		public override void Cleanup()
 		{
 			if ( PlayerCheckerTimer != null )
 			{
@@ -83,14 +88,6 @@ namespace Burdle
 					}
 				}
 			}
-
-			base.End();
-		}
-
-		protected override void OnDestroy()
-		{
-			End();
-			base.OnDestroy();
 		}
 
 		public void CreatePlatforms()

@@ -1,10 +1,11 @@
-﻿using Sandbox;
+﻿using Degg.Ui.Elements;
+using Sandbox;
 using Sandbox.UI;
 using System;
 
 namespace Burdle
 {
-	public class GameTimerUi : Panel
+	public class GameTimerUi : PlayerPanel<BurdlePlayer>
 	{
 		public Label TimeLeft { get; set; }
 
@@ -17,14 +18,20 @@ namespace Burdle
 		public override void Tick()
 		{
 			base.Tick();
-			var current = BurdleGame.CurrentGame?.Minigames?.Current;
+			var player = GetClientPawn();
+			var current = player?.Gamemode;
 			if ( current != null )
 			{
-				var hasTimer = current.GameEndTime > 0;
+				var timeLeft = current.GameEndTime - Time.Now;
+				if ( timeLeft  < 0)
+				{
+					timeLeft = 0;
+				}
+				var hasTimer = timeLeft > 0;
 				SetClass( "hidden", !hasTimer );
 				if ( hasTimer )
 				{
-					var difference = Math.Round( current.GameEndTime - Time.Now );
+					var difference = Math.Round( timeLeft );
 					var seconds = Math.Floor( difference % 60 );
 					var minutes = Math.Floor( difference / 60 );
 					TimeLeft.Text = $"{minutes}:{seconds}";

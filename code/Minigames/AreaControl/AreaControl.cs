@@ -99,7 +99,6 @@ namespace Burdle
 		{
 			base.Start();
 			GameDuration = 60f * 4;
-			End();
 			Name = "Burdle Control";
 			RedTeam = new List<BurdleEntity>();
 			BlueTeam = new List<BurdleEntity>();
@@ -118,7 +117,7 @@ namespace Burdle
 			}
 		}
 
-		public override void End()
+		public override void Cleanup()
 		{
 			if ( PlayerCheckerTimer != null )
 			{
@@ -134,12 +133,6 @@ namespace Burdle
 					}
 				}
 			}
-		}
-
-		protected override void OnDestroy()
-		{
-			End();
-			base.OnDestroy();
 		}
 
 		public void CreatePlatforms()

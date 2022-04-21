@@ -9,9 +9,9 @@ namespace Degg.Cameras {
 		public Angles TargetAngles;
 		Rotation TargetRotation;
 
+
 		private float Distance = 150.0f;
 		private float TargetDistance = 150.0f;
-
 		public float MinDistance => 100.0f;
 		public float MaxDistance => 300.0f;
 		public float DistanceStep => 10.0f;
@@ -25,9 +25,14 @@ namespace Degg.Cameras {
 
 		public override void Update()
 		{
-			if ( !Entity.IsValid() ) return;
+			Vector3 position = Vector3.Zero;
+			var scale = 1f;
+			if ( Entity?.IsValid() ?? false )
+			{
+				position = Entity.Position;
+			}
 
-			Position = Entity.Position + Vector3.Up * (24 + (Entity.Scale));
+			Position = position + Vector3.Up * (24 + (scale));
 			TargetRotation = Rotation.From( TargetAngles );
 
 			Rotation = Rotation.Slerp( Rotation, TargetRotation, RealTime.Delta * 10.0f );

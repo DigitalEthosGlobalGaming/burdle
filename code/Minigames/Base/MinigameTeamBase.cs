@@ -102,10 +102,15 @@ namespace Burdle
 		}
 		public override void Join( BurdlePlayer player )
 		{
-			if ( player?.MyTeam?.IsValid() ?? false )
+
+			if ( player?.IsValid() ?? false )
 			{
-				Log.Info( "Already in team" );
-				return;
+				if ( player.MyTeam?.IsValid() ?? false )
+				{
+					player.MyTeam.Leave( player );
+				}
+
+				player.MyTeam = null;
 			}
 
 			var team = GetTeamToJoin();
@@ -116,7 +121,7 @@ namespace Burdle
 
 		}
 
-		public override void End()
+		public override void Cleanup()
 		{
 			if ( Teams != null )
 			{
@@ -125,14 +130,12 @@ namespace Burdle
 					team.Delete();
 				}
 			}
-			base.End();
 		}
 
 		public override void Leave( BurdlePlayer player )
 		{
 			if ( player?.IsValid() ?? false )
 			{
-
 				if ( player.MyTeam?.IsValid() ?? false )
 				{
 					player.MyTeam.Leave( player );

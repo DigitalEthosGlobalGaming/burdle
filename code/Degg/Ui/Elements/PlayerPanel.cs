@@ -22,6 +22,19 @@ namespace Degg.Ui.Elements
 			}
 			return null;
 		}
+
+		public T GetClientPawn()
+		{
+			if ( Local.Client?.Pawn?.IsValid() ?? false )
+			{
+				var pawn = Local.Client.Pawn;
+				if ( pawn is T )
+				{
+					return (T)pawn;
+				}
+			}
+			return null;
+		}
 		public T GetPlayer()
 		{
 			return Player;

@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Degg.Util;
+using Sandbox;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,8 +31,8 @@ namespace Burdle
 		{
 			var games = new List<string>();
 			games.Add( "Racer" );
-			games.Add( "Platformer" );
-			games.Add( "AreaControl" );
+			// games.Add( "Platformer" );
+			//games.Add( "AreaControl" );
 			games.Add( "Burdleball" );
 			return games;
 		}
@@ -39,6 +40,11 @@ namespace Burdle
 
 		public void RandomGame(int count = 0)
 		{
+			if ( IsClient )
+			{
+				throw new System.Exception( "Why here" );
+				return;
+			}
 			if ( count >= 100)
 			{
 				throw new System.Exception( "Error starting game couldn't find a random game to start in 100 goes." );
@@ -46,13 +52,18 @@ namespace Burdle
 			var games = GetGamesList();
 			var game = Rand.FromList( games );
 			var newGame = StartGame( game );
-			if ( newGame  == null)
+			if ( newGame == null)
 			{
 				RandomGame( count + 1 );
 			}
 		}
 		public MinigameBase StartGame(string game, bool forceStart = false)
 		{
+			if ( IsClient )
+			{
+				throw new System.Exception("Why here");
+				return null;
+			}
 			var newGame = Library.Create<MinigameBase>( game );
 			CurrentName = game;
 			return StartGame( newGame, forceStart );
@@ -65,7 +76,6 @@ namespace Burdle
 				var players = All.OfType<BurdlePlayer>();
 				foreach ( var player in players.ToList() )
 				{
-					Log.Info( player );
 					player.JoinGame( Current );
 				}
 			}
@@ -77,17 +87,19 @@ namespace Burdle
 			{
 				return null;
 			}
+
 			if (!game.CanStart() && !forceStart )
 			{
+				game.Delete();
 				return null;
 			}
+
 			if (Current.IsValid())
 			{
 				Current.Delete();
 			}
 
 			Current = game;
-
 			Current.Start();
 			AddAllPlayersToGames();
 			Current.SpawnAllPlayers();
