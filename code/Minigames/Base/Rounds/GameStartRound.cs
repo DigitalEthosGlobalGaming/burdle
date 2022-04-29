@@ -27,7 +27,7 @@ namespace Burdle
 			base.Spawn();
 			SpawnBurdle = false;
 			IsLoading = true;
-			Duration = 30f;
+			Duration = 5f;
 		}
 
 		public override void Start()

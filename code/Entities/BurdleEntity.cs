@@ -66,5 +66,10 @@ namespace Burdle
 		{
 			return (T) BurdleGame.CurrentGame.Minigames.Current;
 		}
+
+		public virtual void Tick()
+		{
+
+		}
 	}
 }

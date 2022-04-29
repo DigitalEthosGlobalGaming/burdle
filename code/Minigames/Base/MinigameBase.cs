@@ -1,4 +1,5 @@
 ﻿using Degg.Cameras;
+using Degg.Utils;
 using Sandbox;
 using System.Collections.Generic;
 
@@ -7,6 +8,8 @@ namespace Burdle
 	public partial class MinigameBase: Entity
 	{
 		public Dictionary<long, BurdlePlayer> Players { get; set; }
+
+		public List<ITickable> TickableChildren { get; set; }
 
 		[Net]
 		public Vector3 GamemodeCenter { get; set; }
@@ -30,6 +33,7 @@ namespace Burdle
 			Name = "Game";
 			Transmit = TransmitType.Always;
 			Players = new Dictionary<long, BurdlePlayer>();
+			TickableChildren = new List<ITickable>();
 			if ( IsServer )
 			{
 				Init();
@@ -47,7 +51,7 @@ namespace Burdle
 
 		public virtual void SpawnPlayer(BurdlePlayer player)
 		{
-			var round = GetRound();
+			GetRound();
 			var spawn = GetSpawnPosition( player );
 			var burdle = player.GetBurdle();
 			if ( burdle?.IsValid() ?? false )
@@ -97,6 +101,13 @@ namespace Burdle
 			if (CurrentRound != null)
 			{
 				CurrentRound.Tick();
+			}
+			if ( TickableChildren  != null)
+			{
+				foreach(var i in TickableChildren)
+				{
+					i.Tick( Time.Delta, Time.Tick );
+				}
 			}
 		}
 		public virtual void Start()

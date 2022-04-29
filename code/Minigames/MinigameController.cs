@@ -31,8 +31,9 @@ namespace Burdle
 		{
 			var games = new List<string>();
 			games.Add( "Racer" );
-			// games.Add( "Platformer" );
-			//games.Add( "AreaControl" );
+			games.Add( "Platformer" );
+			games.Add( "AreaControl" );
+			games.Add( "Falling" );			
 			games.Add( "Burdleball" );
 			return games;
 		}
