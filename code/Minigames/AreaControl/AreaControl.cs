@@ -88,6 +88,7 @@ namespace Burdle
 			return false;
 		}
 
+
 		public override void Join( BurdlePlayer player )
 		{
 			base.Join( player );
@@ -95,11 +96,18 @@ namespace Burdle
 			player.Client.SetInt( "team", 0 );
 		}
 
+		public override void Init()
+		{
+			base.Init();
+			Name = "Burdle Control";
+			var round = AddRound<MinigameRound>();
+			round.Name = Name;
+			round.Duration = 60 * 5f;
+		}
+
 		public override void Start()
 		{
 			base.Start();
-			GameDuration = 60f * 4;
-			Name = "Burdle Control";
 			RedTeam = new List<BurdleEntity>();
 			BlueTeam = new List<BurdleEntity>();
 			PlayerCheckerTimer = new Timer( CheckPlayers, 1000f );

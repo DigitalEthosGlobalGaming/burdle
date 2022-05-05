@@ -11,6 +11,9 @@ namespace Burdle
 		public Carriable CarriedItem { get; set; }
 
 		[Net]
+		public bool Frozen { get; set; }
+
+		[Net]
 		public bool CanJump { get; set; }
 
 		public string SoundToPlay { get; set; }
@@ -25,6 +28,7 @@ namespace Burdle
 			Transmit = TransmitType.Always;
 			Position = Position + (Vector3.Up * 100f);
 			UpdatModel();
+			Frozen = false;
 		}
 
 		public override void ClientSpawn()
@@ -48,6 +52,7 @@ namespace Burdle
 				SetModel( "degg/models/monsters/chicken.vmdl" );
 				Scale = 0.5f;
 				SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+				PhysicsBody.AutoSleep = false;
 			}
 			CreateWorldUi(true);
 		}
@@ -57,7 +62,6 @@ namespace Burdle
 		{
 			if ( (SoundToPlay ?? "") != "" )
 			{
-
 				var sound = PlaySound( SoundToPlay );
 				sound.SetPitch( 1f );
 				sound.SetVolume( Math.Clamp( SoundVolume,0f,1f ));
@@ -65,9 +69,24 @@ namespace Burdle
 			}
 		}
 
+		public void Freeze()
+		{
+			SetupPhysicsFromModel( PhysicsMotionType.Static );
+			Frozen = true;
+		}
+		public void UnFreeze()
+		{
+			Log.Info( "Unfreeze" );
+			SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+			PhysicsBody.Sleeping = false;
+			Frozen = false;
+		}
+
 		public override void Simulate( Client cl )
 		{
+			PhysicsBody.Sleeping = false;
 			base.Simulate( cl );
+
 
 			if (IsServer) {
 				var distance = Velocity.Distance( Vector3.Zero );

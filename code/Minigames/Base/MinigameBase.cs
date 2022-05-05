@@ -58,6 +58,7 @@ namespace Burdle
 			{
 				burdle.Velocity = Vector3.Zero;
 				burdle.Position = spawn;
+				burdle.UnFreeze();
 			}
 
 			GetRound()?.OnPlayerSpawn( player );
@@ -70,6 +71,24 @@ namespace Burdle
 				SpawnPlayer( item.Value );
 			}
 		}
+
+		public List<BurdleEntity> GetBurdles()
+		{
+			List<BurdleEntity> burdles = new List<BurdleEntity>();
+
+			foreach ( var item in Players )
+			{
+				if ( item.Value?.IsValid() ?? false ) {
+					var burdle = item.Value.Burdle;
+					if (burdle?.IsValid() ?? false)
+					{
+						burdles.Add( burdle );
+					}
+				}
+			}
+
+			return burdles;
+	}
 
 
 		public virtual void Join( BurdlePlayer player)
@@ -150,6 +169,21 @@ namespace Burdle
 			}
 			base.OnDestroy();
 
+		}
+
+		public virtual void FreezePlayers()
+		{
+			foreach(var burdle in GetBurdles())
+			{
+				burdle.Freeze();
+			}
+		}
+		public virtual void UnFreezePlayers()
+		{
+			foreach ( var burdle in GetBurdles() )
+			{
+				burdle.UnFreeze();
+			}
 		}
 
 

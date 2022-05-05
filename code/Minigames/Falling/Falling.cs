@@ -16,7 +16,7 @@ namespace Burdle
 		public List<Vector3> SpawnPoints { get; set; }
 
 		public Platform EndPlatform { get; set; }
-		public bool IsOver { get; set; }
+		public bool IsStarted { get; set; }		
 
 		public float MinimumHeight { get; set; }
 
@@ -28,13 +28,13 @@ namespace Burdle
 			var round = AddRound<MinigameRound>();
 			round.Name = Name;
 			round.Duration = 60 * 5f;
+			IsStarted = false;
 		}
 
 		public override void Join( BurdlePlayer player )
 		{
 			base.Join( player );
-			var burdle = player.GetBurdle();
-			player.SetScore( 0 );
+			player.SetScore( 1 );
 		}
 
 		public override void Start()
@@ -49,7 +49,7 @@ namespace Burdle
 				var player = kv.Value;
 				if ( player.IsValid )
 				{
-					player.Client.SetInt( "score", 0 );
+					player.Client.SetInt( "score", 1 );
 					player.Respawn();
 				}
 			}
@@ -87,70 +87,104 @@ namespace Burdle
 
 			Platforms = new List<FallingPlatform>();
 
-			var tiles = 7;
+			var tiles = 4;
+			var tileZ = tiles * 3;
+			var tileHeightSpace = 105f;
 			var tileSize = 105f;
 			MinimumHeight = float.MaxValue;
-			var maxHeight = float.MinValue;
 			var scale = 2f;
 
 			for ( int x = 0; x < tiles; x++ )
 			{
 				for ( int y = 0; y < tiles; y++ )
 				{
-					for ( int z = 0; z < tiles; z++ )
+					for ( int z = 0; z < tileZ; z++ )
 					{
-						var position = new Vector3( x, y, z );
-						position = position * (tileSize * scale);
+						var position = new Vector3( x * (tileSize * scale), y * (tileSize * scale), z * tileHeightSpace );
 
 						var platform = Create<FallingPlatform>();
 						platform.Position = position;
 						platform.Scale = scale;
 						Platforms.Add( platform );
 						TickableChildren.Add( platform );
-						if (z == tiles -1)
+						if (z == tileZ - 1)
 						{
-							SpawnPoints.Add( position + Vector3.Up * 50f );
+							SpawnPoints.Add( position + Vector3.Up * 250f );
 						}
 					}
 				}
 			}
 
-			var firstPlatform = Platforms[0];
-			var lastPlatform = Platforms[Platforms.Count - 1];
+			var cameraFocusPlatform = Platforms[(int)(Platforms.Count/2)];
 
 			var transition = LoadingScene.AddTransition<MovementTransition>();
-			transition.Duration = 5f;
-			transition.Target = firstPlatform;
-			maxHeight = maxHeight + 100f;
-			transition.StartPosition = lastPlatform.Position.WithZ( maxHeight );;
-			transition.EndPosition = firstPlatform.Position.WithZ( maxHeight );
+			transition.Duration = 7f;
+			transition.Target = cameraFocusPlatform;
+			transition.StartPosition = new Vector3( -1000, -1000, 0 );
+			transition.EndPosition = new Vector3( 0,0 , (tileZ + 2) * tileHeightSpace );
 			LoadingScene.AddTransition( transition );
 
 			EndPlatform = new Platform();
-			EndPlatform.Position = new Vector3( (tiles * tileSize) / 2, (tiles * tileSize) / 2, -500f );
-			MinimumHeight = -200f;
+			MinimumHeight = -750f;
+			EndPlatform.Position = new Vector3( (tiles * tileSize) / 2, (tiles * tileSize) / 2, MinimumHeight / 2 );
+
 			EndPlatform.RenderColor = new Color( 0, 0.5f, 0, 0.5f );
 			EndPlatform.Scale = tiles * 2;
+
+
 		}
 
+
+		
 		public override Vector3 GetSpawnPosition( BurdlePlayer player )
 		{
+			if (player.GetScore() == 0)
+			{
+				return EndPlatform.Position + (Vector3.Up * 100);
+			}
 			return Rand.FromList( SpawnPoints );
+		}
+
+		public override void SpawnPlayer( BurdlePlayer player )
+		{
+			base.SpawnPlayer( player );
+			if (IsStarted)
+			{
+				UnFreezePlayers();
+			} else
+			{
+				FreezePlayers();
+			}
 		}
 
 		public override void OnRoundStart( MinigameRound r )
 		{
 			base.OnRoundStart( r );
-			if (r is GameStartRound round)
+			if (r is GameStartRound || r is GameEndRound)
 			{
-				round.Duration = 5f;
+				IsStarted = false;
+				FreezePlayers();
+				r.Duration = 7f;
+			} else { 
+				IsStarted = true;
+				UnFreezePlayers();
+			}
+		}
+
+		public override void OnRoundEnd( MinigameRound r )
+		{
+			base.OnRoundEnd( r );
+			if ( r is GameEndRound )
+			{
+				BurdleGame.CurrentGame.Minigames.RandomGame();
 			}
 		}
 
 		public void CheckPlayers( Timer t )
 		{
-			var winningPlayers = 0;
+			var livingPlayers = 0;
 			var numberOfPlayers = 0;
+			var minimumSurvivingPlayers = 1;
 			
 			foreach ( var kv in Players )
 			{
@@ -158,21 +192,30 @@ namespace Burdle
 				if ( player.IsValid )
 				{				
 					numberOfPlayers = numberOfPlayers + 1;
-
-					if ( player.GetScore() >= Platforms.Count - 1 )
+					if (player.GetScore() > 0)
 					{
-						winningPlayers = winningPlayers + 1;
+						livingPlayers = livingPlayers + 1;
 					}
-					if ( player.Position.z < (MinimumHeight - 100f) )
+
+					if ( player.Position.z < 0 )
 					{
-						SpawnPlayer( player );
+						player.SetScore( 0 );
+						if (player.Position.z < MinimumHeight)
+						{							
+							SpawnPlayer( player );
+						}
 					}
 				}
 			}
 
-			if ( numberOfPlayers > 0 && numberOfPlayers == winningPlayers)
+			if (numberOfPlayers <=1)
 			{
-				BurdleGame.CurrentGame.Minigames.RandomGame();
+				minimumSurvivingPlayers = 0;
+			}
+
+			if ( IsStarted && livingPlayers <= minimumSurvivingPlayers )
+			{
+				NextRound();
 			}
 		}
 	}

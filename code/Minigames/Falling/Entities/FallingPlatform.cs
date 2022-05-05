@@ -7,7 +7,7 @@ namespace Burdle
 	public partial class FallingPlatform : Platform, ITickable
 	{
 
-		public const float Duration = 5f;
+		public const float Duration = 3f;
 		public float DeleteStartTime { get; set; }
 		public int Index { get; set; }
 		public TickableCollection ParentCollection { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
@@ -29,11 +29,12 @@ namespace Burdle
 
 		public void Tick( float delta, float currentTick )
 		{
+			var game = this.GetGame<Falling>();
 			if ( DeleteStartTime != 0 )
 			{
 				var now = Time.Now - DeleteStartTime;
 				var percentage = now / Duration;
-				RenderColor = Color.Lerp( Color.White, Color.Transparent, percentage );
+				RenderColor = Color.Lerp( Color.White, Color.Transparent, percentage - 0.1f );
 				if ( percentage > 1 )
 				{
 					Delete();

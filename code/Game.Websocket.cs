@@ -24,7 +24,7 @@ namespace Burdle
 			{
 				if ( WS == null )
 				{
-					bool isLocal = true;
+					bool isLocal = false;
 					if ( isLocal )
 					{
 						WS = new Degg.Websocket.DeggSocket( "ws://localhost:8080" );

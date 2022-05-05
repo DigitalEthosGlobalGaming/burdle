@@ -64,7 +64,11 @@ namespace Burdle
 
 		public T GetGame<T>() where T: MinigameBase
 		{
-			return (T) BurdleGame.CurrentGame.Minigames.Current;
+			if ( BurdleGame.CurrentGame?.Minigames?.Current?.IsValid() ?? false )
+			{
+				return (T)BurdleGame.CurrentGame.Minigames.Current;
+			}
+			return null;
 		}
 
 		public virtual void Tick()
