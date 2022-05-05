@@ -1,5 +1,6 @@
 ﻿
 using Degg;
+using Degg.Analytics;
 using Degg.Core;
 using Degg.Utils;
 using Degg.Websocket;
@@ -19,10 +20,9 @@ namespace Burdle
 	/// </summary>
 	public partial class BurdleGame : AdvGame
 	{
-
 		public static DeggSocket WS { get; set; }
-		public static BurdleGame CurrentGame {get;set;}
-
+		public static BurdleGame CurrentGame { get; set; }
+		public static DeggAnalytics Analytics {get;set;}
 		public bool HasSetupWebsocket { get; set; } = false;
 		[Net]
 		public MinigameController Minigames { get; set; }

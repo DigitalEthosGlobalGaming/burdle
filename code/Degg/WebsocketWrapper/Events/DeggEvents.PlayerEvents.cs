@@ -21,7 +21,6 @@ namespace Degg.Websocket
 			PlayerId = cl.PlayerId.ToString();
 			if ( DeggSocket.Current != null )
 			{
-
 				DeggSocket.Current.Event( "Player.Join", this );
 			}
 		}
@@ -32,12 +31,15 @@ namespace Degg.Websocket
 		[JsonPropertyName( "name" )]
 		string Name { get; init; }
 		[JsonPropertyName( "playerId" )]
-		string PlayerId { get; set; }
+		public string PlayerId { get; set; }
 		public PlayerLeaveEvent( Client cl )
 		{
 			Name = cl.Name;
 			PlayerId = cl.PlayerId.ToString();
-			DeggSocket.Current.Event( "Player.Leave", this );
+			if ( DeggSocket.Current != null )
+			{
+				DeggSocket.Current.Event( "Player.Leave", this );
+			}
 		}
 	}
 

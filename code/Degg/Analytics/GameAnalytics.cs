@@ -22,7 +22,7 @@ namespace Degg.Analytics
 		public string Tags { get; set; }
 	}
 
-	public partial class GameAnalytics
+	public partial class DeggAnalytics
 	{
 		public const string PublicEndpoint = "api.gameanalytics.com";
 		public const string DevPublicEndpoint = "sandbox-api.gameanalytics.com";
@@ -45,7 +45,7 @@ namespace Degg.Analytics
 			data.user_id = userId;
 			data.platform = platform;
 			data.os_version = os_version;
-			data.build = GameAnalytics.Build;
+			data.build = DeggAnalytics.Build;
 
 			var url = $"{DevPublicEndpoint}/remote_configs/v1/init?game_key={Key}";		
 		}

@@ -24,7 +24,14 @@ namespace Burdle
 			{
 				if ( WS == null )
 				{
-					WS = new Degg.Websocket.DeggSocket( "ws://sbox.de-gg.com" );
+					bool isLocal = true;
+					if ( isLocal )
+					{
+						WS = new Degg.Websocket.DeggSocket( "ws://localhost:8080" );
+					} else
+					{
+						WS = new Degg.Websocket.DeggSocket( "ws://sbox.de-gg.com" );
+					}
 			
 				}
 				if ( username != "" && password != "" ) {
